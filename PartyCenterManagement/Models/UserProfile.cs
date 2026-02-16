@@ -8,8 +8,8 @@ namespace PartyCenterManagement.Models
         [Key]
         public string UserID { get; set; } = "";
         public IdentityUser? User { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
 
     }
 }
