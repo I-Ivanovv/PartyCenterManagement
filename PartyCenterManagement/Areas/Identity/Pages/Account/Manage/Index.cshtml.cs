@@ -76,7 +76,7 @@ namespace PartyCenterManagement.Areas.Identity.Pages.Account.Manage
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            var userPr = await _ups.GetUserAsync();
+            var userPr = await _ups.GetUserAsync(user);
                
             
             Username = userName;
@@ -104,7 +104,6 @@ namespace PartyCenterManagement.Areas.Identity.Pages.Account.Manage
         public async Task<IActionResult> OnPostAsync()
         {
             var user = await _userManager.GetUserAsync(User);
-            var userPr = await _ups.GetUserAsync();
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
@@ -115,12 +114,12 @@ namespace PartyCenterManagement.Areas.Identity.Pages.Account.Manage
                 await LoadAsync(user);
                 return Page();
             }
+            var userPr = await _ups.GetUserAsync(user);
             var first = userPr.FirstName;
             var last = userPr.LastName;
-            if (Input.FirstName != first)
+            if (Input.FirstName != first || Input.LastName != last)
             {
-                userPr.FirstName = Input.FirstName;
-                userPr.LastName = Input.LastName;
+                await _ups.EditUserProfile(userPr,Input.FirstName,Input.LastName);
             }
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             if (Input.PhoneNumber != phoneNumber)

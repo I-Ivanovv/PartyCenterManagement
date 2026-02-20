@@ -142,7 +142,7 @@ namespace PartyCenterManagement.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(user, "Client");
-                    _ups.CreateUserProfileAsync(user, Input.FirstName, Input.LastName);
+                    await _ups.CreateUserProfileAsync(user, Input.FirstName, Input.LastName);
 
                     _logger.LogInformation("User created a new account with password.");
 

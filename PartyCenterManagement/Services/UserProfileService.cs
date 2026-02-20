@@ -30,12 +30,18 @@ namespace PartyCenterManagement.Services
             await _db.SaveChangesAsync();
         }
 
-        public async Task<UserProfile> GetUserAsync()
+        public async Task<UserProfile> GetUserAsync(IdentityUser user)
         {
-            var user = await _userManager.GetUserAsync(User);
             var userPr = _db.UserProfile.Where(x => x.User == user).FirstOrDefaultAsync();
             return await userPr;
 
+        }
+
+        public async Task EditUserProfile(UserProfile userPr, string first, string last)
+        {
+            userPr.FirstName = first;
+            userPr.LastName = last;
+            await _db.SaveChangesAsync();
         }
     }
 }
