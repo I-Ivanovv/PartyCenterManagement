@@ -182,59 +182,68 @@ input, textarea, select {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-    /* Brand */
-    .theme-navbar .navbar-brand {
-        color: #FFFFFF; /* white brand text */
+--------------------------- */
+.theme-navbar {
+    background-color: var(--primary); /* vivid violet background */
+    color: #fff; /* white default text */
+    border-bottom: 1px solid var(--primary-dark);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Brand */
+.theme-navbar .navbar-brand {
+    color: #FFFFFF; /* white brand text */
+    font-weight: 600;
+    transition: color 0.2s ease-in-out;
+}
+
+    .theme-navbar .navbar-brand:hover {
+        color: var(--primary-light); /* light violet on hover */
+    }
+
+/* Links */
+.theme-navbar .nav-link {
+    color: #E0E0E0; /* light gray links for contrast */
+    font-weight: 700;
+    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+    .theme-navbar .nav-link:hover {
+        color: var(--primary-light); /* teal hover for accent */
+        background-color: rgba(255,255,255,0.1);
+        border-radius: 0.25rem;
+    }
+
+    /* Active link */
+    .theme-navbar .nav-link.active {
+        color: #FFFFFF; /* white active link */
         font-weight: 600;
-        transition: color 0.2s ease-in-out;
     }
 
-        .theme-navbar .navbar-brand:hover {
-            color: var(--primary-light); /* light violet on hover */
-        }
+/* Mobile toggle button (hamburger) */
+.theme-navbar .navbar-toggler {
+    border-color: rgba(255,255,255,0.5);
+}
 
-    /* Links */
-    .theme-navbar .nav-link {
-        color: #E0E0E0; /* light gray links for contrast */
-        font-weight: 500;
-        transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+.theme-navbar .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 0.9)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+/* Dropdown menus (if any) */
+.theme-navbar .dropdown-menu {
+    background-color: var(--primary-dark); /* darker violet for dropdown */
+    border: none;
+}
+
+.theme-navbar .dropdown-item {
+    color: #E0E0E0; /* light gray dropdown links */
+}
+
+    .theme-navbar .dropdown-item:hover {
+        background-color: var(--primary-light);
+        color: #FFFFFF;
     }
-
-        .theme-navbar .nav-link:hover {
-            color: var(--accent); /* teal hover for accent */
-            background-color: rgba(255,255,255,0.1);
-            border-radius: 0.25rem;
-        }
-
-        /* Active link */
-        .theme-navbar .nav-link.active {
-            color: #FFFFFF; /* white active link */
-            font-weight: 600;
-        }
-
-    /* Mobile toggle button (hamburger) */
-    .theme-navbar .navbar-toggler {
-        border-color: rgba(255,255,255,0.5);
-    }
-
-    .theme-navbar .navbar-toggler-icon {
-        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 0.9)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
-    }
-
-    /* Dropdown menus (if any) */
-    .theme-navbar .dropdown-menu {
-        background-color: var(--primary-dark); /* darker violet for dropdown */
-        border: none;
-    }
-
-    .theme-navbar .dropdown-item {
-        color: #E0E0E0; /* light gray dropdown links */
-    }
-
-        .theme-navbar .dropdown-item:hover {
-            background-color: var(--primary-light);
-            color: #FFFFFF;
-        }
 
 /* Footer with primary dark background */
 /* --------------------------
@@ -242,13 +251,16 @@ input, textarea, select {
 --------------------------- */
 .theme-footer {
     background-color: #A29BFE; /* deep muted violet/blue */
-    color: #E0E0E0; /* light gray text for readability */
-    padding: 1rem 0;
+    color: #FFFFFF; /* light gray text for readability */
+    padding: 0;
+    font-weight: 600;
+    text-align: center;
+    font-size: 19px;
     border-top: 1px solid #5649C0; /* subtle dark border to match theme */
 }
 
     .theme-footer a {
-        color: #00CEC9; /* accent teal links for contrast */
+        color: #e0dcdc;
         text-decoration: none;
         transition: color 0.2s ease-in-out;
     }
