@@ -14,7 +14,7 @@
     /* Accent color */
     --accent: #00CEC9;
     /* Backgrounds and surfaces */
-    --background: #F8F9FC;
+    --background: #f1f1ff;
     --surface: #FFFFFF;
     /* Text */
     --text-primary: #2D3436;
@@ -30,6 +30,8 @@ body {
     background-color: var(--background);
     color: var(--text-primary);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
 a {
@@ -41,6 +43,8 @@ a {
     a:hover {
         color: var(--primary-dark);
     }
+
+    
 
 /* --------------------------
    3. Navbar
@@ -82,9 +86,39 @@ a {
     transition: background-color 0.2s, border-color 0.2s;
 }
 
+.btn-primary:active {
+    background-color: #5e4fd1 !important; /* Maybe change */
+    border-color: #5e4fd1 !important;
+    color: #fff !important;
+    opacity: 1 !important;
+    box-shadow: none !important; 
+    outline: none !important;
+}
     .btn-primary:hover {
         background-color: var(--primary-dark);
         border-color: var(--primary-dark);
+    }
+
+.btn-primary-light {
+    background-color: #a29cf7;
+    border-color: #a29cf7;
+    color: #fff;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+    .btn-primary-light:active {
+        background-color: #9b95f0 !important; /* Maybe change */
+        border-color: #9b95f0 !important;
+        color: #fff !important;
+        opacity: 1 !important; 
+        box-shadow: none !important; 
+        outline: none !important; 
+    }
+
+    .btn-primary-light:hover {
+        background-color: #938ee8;
+        border-color: #938ee8;
+        color: #fff;
+        transition: background-color 0.2s, border-color 0.2s;
     }
 
 .btn-accent {
@@ -273,3 +307,67 @@ input, textarea, select {
     .theme-footer small {
         color: #B0B0B0; /* muted gray for less important text */
     }
+
+.hero {
+    position: relative;
+    width: 100%;
+    height: 100vh; /* full viewport height */
+    overflow: hidden; /* hide anything outside */
+}
+
+.hero-img {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+    margin-top:-2rem;
+}
+
+/* Text overlay */
+.hero-text {
+    position: absolute;
+    top: 32%;
+    transform: translateY(-50%);
+    color: white;
+    font-family: Bahnschrift, sans-serif;
+}
+
+/* Move the text block to the right */
+.hero-text-right {
+    right: 0%; /* distance from right edge */
+    text-align: center; /* centers words inside the block */
+    width: 500px; /* optional: control block width */
+}
+
+.hero-text-left {
+    top:25%;
+    left: 5%;
+    text-align: center; /* centers words inside the block */
+    width: 1000px; /* optional: control block width */
+}
+
+.hero-btn {
+    top:37%;
+    left:-7%;
+    text-align: center; /* centers words inside the block */
+    width: 1000px; /* optional: control block width */
+}
+
+/* Stack "Party" above "Animals" */
+.hero-title span {
+    display: block;
+    line-height: 1.1;
+}
+
+/* Style title */
+.hero-title {
+    font-size: 6rem;
+    font-weight: 800;
+}
+
+/* Optional paragraph styling */
+.hero-text p {
+    font-size: 3rem;
+    margin-top: 0.5rem;
+    font-weight: 350;
+}
+
