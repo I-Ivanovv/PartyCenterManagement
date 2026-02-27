@@ -2,21 +2,46 @@
     ViewData["Title"] = "Home Page";
 }
 <body>
-    <img src="~/images/background1op.png" alt="Description" class="hero-img">
-    <div class="hero-text hero-text-right">
-        <h1 class="hero-title">
-            <span>Party</span>
-            <span>Animals</span>
-        </h1>
-    </div>
-    <div class="hero-text hero-text-left">
-        <p class="hero-text">
-            <span>The best party experience <br /></span>
-            <span>you can get!</span>
-        </p>
-    </div>
-    <div class="hero-text hero-btn">
-        <button id="" type="submit" class="w-50 btn btn-lg btn-primary-light">Reserve</button>
-    </div>
+    <div class="hero">
+        <img src="~/images/background1op.png" alt="Party background" class="hero-img">
 
+        <div class="hero-overlay">
+            <div class="hero-content">
+
+                <div class="hero-left">
+                    <p class="hero-subtitle">
+                        The best party experience <br />
+                        you can get!
+                    </p>
+
+                    <button type="submit" class="btn btn-lg btn-primary-light hero-button">
+                        Reserve
+                    </button>
+                </div>
+
+                <div class="hero-right">
+                    <h1 class="hero-title">
+                        <span>Party</span>
+                        <span>Animals</span>
+                    </h1>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="hero">
+        <img src="~/images/background2.png" alt="Party background" class="hero-img"">
+
+        <div class="hero-overlay" style="background: rgba(0, 0, 0, 0);">
+            <div class="hero-content">
+                <div class="hero-right">
+                    <h1 class="hero-title">
+                        <span></span>
+                        <span></span>
+                    </h1>
+                </div>
+
+            </div>
+        </div>
+    </div>
 </body>

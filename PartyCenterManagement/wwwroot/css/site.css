@@ -44,7 +44,7 @@ a {
         color: var(--primary-dark);
     }
 
-    
+
 
 /* --------------------------
    3. Navbar
@@ -160,10 +160,10 @@ a {
     background-color: var(--surface);
     border-top: 1px solid var(--border);
     color: var(--text-muted);
-    padding: 1rem 0;
 }
 
-    .footer a {
+    .
+    a {
         color: var(--primary);
     }
 
@@ -286,11 +286,11 @@ input, textarea, select {
 .theme-footer {
     background-color: #A29BFE; /* deep muted violet/blue */
     color: #FFFFFF; /* light gray text for readability */
-    padding: 0;
     font-weight: 600;
     text-align: center;
     font-size: 19px;
     border-top: 1px solid #5649C0; /* subtle dark border to match theme */
+    padding: 20px;
 }
 
     .theme-footer a {
@@ -307,67 +307,78 @@ input, textarea, select {
     .theme-footer small {
         color: #B0B0B0; /* muted gray for less important text */
     }
+/* ==========================
+   HERO SECTION (Responsive)
+========================== */
 
 .hero {
     position: relative;
     width: 100%;
-    height: 100vh; /* full viewport height */
-    overflow: hidden; /* hide anything outside */
+    height: 600px; /* banner height */
+    overflow: hidden;
+    margin-top:-1em;
 }
-
+/* Background image */
 .hero-img {
+    position: absolute;
     width: 100%;
-    display: block;
+    height: 100%;
     object-fit: cover;
-    margin-top:-2rem;
+    top: 0;
+    left: 0;
 }
 
-/* Text overlay */
-.hero-text {
+/* Dark overlay for readability */
+.hero-overlay {
     position: absolute;
-    top: 32%;
-    transform: translateY(-50%);
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    display: flex;
+    align-items: center;
+}
+
+/* Content container */
+.hero-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 3%; /* smaller side padding */
     color: white;
     font-family: Bahnschrift, sans-serif;
 }
 
-/* Move the text block to the right */
-.hero-text-right {
-    right: 0%; /* distance from right edge */
-    text-align: center; /* centers words inside the block */
-    width: 500px; /* optional: control block width */
+/* Left side */
+.hero-left {
+    max-width: 1000px;
+    text-align: center;
 }
 
-.hero-text-left {
-    top:25%;
-    left: 5%;
-    text-align: center; /* centers words inside the block */
-    width: 1000px; /* optional: control block width */
+.hero-right {
+    text-align: center;
 }
 
-.hero-btn {
-    top:37%;
-    left:-7%;
-    text-align: center; /* centers words inside the block */
-    width: 1000px; /* optional: control block width */
-}
-
-/* Stack "Party" above "Animals" */
-.hero-title span {
-    display: block;
-    line-height: 1.1;
-}
-
-/* Style title */
-.hero-title {
-    font-size: 6rem;
-    font-weight: 800;
-}
-
-/* Optional paragraph styling */
-.hero-text p {
-    font-size: 3rem;
-    margin-top: 0.5rem;
+.hero-subtitle {
+    font-size: clamp(1.5rem, 3vw, 3rem);
     font-weight: 350;
+    margin-bottom: 2rem;
 }
 
+/* Button spacing */
+.hero-button {
+    padding: 0.8em 7rem;
+    font-size: 1.1rem;
+}
+
+/* Right side title */
+.hero-title {
+    font-size: clamp(3rem, 6vw, 6rem);
+    font-weight: 800;
+    line-height: 1.05;
+    text-align: center; /* THIS centers Party over Animals */
+}
+
+    .hero-title span {
+        display: block;
+    }

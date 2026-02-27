@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/PartyCenterManagement.styles.css" asp-append-version="true" />
 </head>
-<body >
+<body class="d-flex flex-column min-vh-100">
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm mb-3 theme-navbar">
             <div class="container-fluid">
@@ -35,14 +35,12 @@
             </div>
         </nav>
     </header>
-    <div class="container-fluid p-0 m-0">
-        <main role="main" class="pb-3">
+    <main role="main" class="pb-3 flex-fill">
             @RenderBody()
         </main>
-    </div>
 
-    <footer class="border-top footer theme-footer">
-        <div class="container">
+    <footer class="border-top theme-footer">
+        <div class="container d-flex flex-wrap">
             &copy; 2026 - PartyCenterManagement - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
