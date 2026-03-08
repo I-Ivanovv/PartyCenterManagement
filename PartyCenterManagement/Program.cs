@@ -20,6 +20,8 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<UserProfileService>();
+builder.Services.AddScoped<PackageServices>();
+builder.Services.AddScoped<ReservationServices>();
 
 var app = builder.Build();
 

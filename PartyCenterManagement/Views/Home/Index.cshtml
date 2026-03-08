@@ -3,28 +3,22 @@
 }
 <body>
     <div class="hero">
-        <img src="~/images/background1op.png" alt="Party background" class="hero-img">
+        <img src="~/images/background1.png" alt="Party background" class="hero-img">
 
         <div class="hero-overlay">
             <div class="hero-content">
 
                 <div class="hero-left">
                     <p class="hero-subtitle">
-                        The best party experience <br />
-                        you can get!
+                        THE BEST <br />PARTY EXPERIENCE <br />
+                        YOU CAN GET!
                     </p>
 
-                    <button type="submit" class="btn btn-lg btn-primary-light hero-button">
+                    <a href="@Url.Action("Reserve", "Reservation")" class="btn btn-lg btn-primary hero-button">
                         Reserve
-                    </button>
+                    </a>
                 </div>
 
-                <div class="hero-right">
-                    <h1 class="hero-title">
-                        <span>Party</span>
-                        <span>Animals</span>
-                    </h1>
-                </div>
 
             </div>
         </div>
@@ -32,7 +26,7 @@
     <div class="hero-big">
         <img src="~/images/background2.png" alt="Party background" class="hero-img">
 
-        <div class="hero-overlay" style="background: rgba(0, 0, 0, 0.05);">
+        <div class="hero-overlay">
             <div class="hero-content">
 
                 <div class="hero-right hero-text-box">
@@ -67,4 +61,32 @@
         </div>
     </div>
     </div>
+    <section class="contact-info py-5">
+        <div class="container">
+            <div class="row g-4 text-center">
+
+                <div class="col-md-4">
+                    <div class="info-box">
+                        <h5>📍 Location</h5>
+                        <p>123 Party Street Fun City</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="info-box">
+                        <h5>📞 Phone</h5>
+                        <p>+359 888 123 456</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="info-box">
+                        <h5>✉ Email</h5>
+                        <p>contact@partyanimals.com</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
 </body>

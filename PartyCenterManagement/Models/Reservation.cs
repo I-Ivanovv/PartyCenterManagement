@@ -12,12 +12,14 @@
 
         public string Note { get; set; }
         public string Status { get; set; }
+        public double Price { get; set; }
+        public bool Paid { get; set; } = false;
         public string? UserID { get; set; }
         public UserProfile? User { get; set; }
 
-        public string GFirstName { get; set; }
-        public string GLastName { get; set; }
-        public string GPhoneNumber { get; set; }
+        public string? GFirstName { get; set; }
+        public string? GLastName { get; set; }
+        public string? GPhoneNumber { get; set; }
 
         public ICollection<ReservationService> ReservationServices { get; set; }
     }

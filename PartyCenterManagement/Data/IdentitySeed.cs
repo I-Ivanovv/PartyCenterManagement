@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using PartyCenterManagement.Models;
+using PartyCenterManagement.Services;
 
 namespace PartyCenterManagement.Data
 {
@@ -11,6 +12,7 @@ namespace PartyCenterManagement.Data
 
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            var userProfileService = scope.ServiceProvider.GetRequiredService<UserProfileService>();
 
             string[] roles = { "Admin","Employee","Client" };
             foreach (var role in roles)
@@ -19,11 +21,11 @@ namespace PartyCenterManagement.Data
                     await roleManager.CreateAsync(new IdentityRole(role));
                
             }
-            await EnsureUserWithRole(userManager, "admin@party.local", "Admin99*", "Admin");
+            await EnsureUserWithRole(userManager,userProfileService, "admin@party.local", "Admin99*", "Admin");
         }
 
         private static async Task EnsureUserWithRole(
-            UserManager<IdentityUser> userManager,
+            UserManager<IdentityUser> userManager,UserProfileService userProfileService,
             string email,
             string password,
             string role)
@@ -38,12 +40,19 @@ namespace PartyCenterManagement.Data
                     EmailConfirmed = true
                 };
                 var result = await userManager.CreateAsync(user, password);
+
                 if (!result.Succeeded)
                 {
                     var errors = string.Join("; ", result.Errors.Select(e => e.Description));
                     throw new Exception($"Cannot create user {email}: {errors}");
                 }
+                
             }
+            if (await userProfileService.GetUserAsync(user) == null)
+            {
+                await userProfileService.CreateUserProfileAsync(user, "Admin", "User");
+            }
+            
             if (!await userManager.IsInRoleAsync(user, role))
                 await userManager.AddToRoleAsync(user, role);
         }

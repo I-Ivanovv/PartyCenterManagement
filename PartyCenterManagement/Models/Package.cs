@@ -8,8 +8,8 @@ namespace PartyCenterManagement.Models
 
         public string Name { get; set; }
         public int Price { get; set; }
-        public int? MaxGuests { get; set; }
-        public int? MaxLength { get; set; }
+        public int MaxGuests { get; set; }
+        public int MaxLength { get; set; }
 
         public ICollection<PackageService> PackageServices { get; set; }
     }

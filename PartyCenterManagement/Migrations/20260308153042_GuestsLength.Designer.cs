@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PartyCenterManagement.Data;
 
@@ -11,9 +12,11 @@ using PartyCenterManagement.Data;
 namespace PartyCenterManagement.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260308153042_GuestsLength")]
+    partial class GuestsLength
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -272,7 +275,7 @@ namespace PartyCenterManagement.Migrations
                             MaxGuests = 80,
                             MaxLength = 6,
                             Name = "Ultra",
-                            Price = 400
+                            Price = 350
                         });
                 });
 
@@ -401,9 +404,6 @@ namespace PartyCenterManagement.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ServiceID"));
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
-
                     b.Property<string>("Serv")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -416,31 +416,26 @@ namespace PartyCenterManagement.Migrations
                         new
                         {
                             ServiceID = 1,
-                            Price = 50.0,
                             Serv = "Entertainer"
                         },
                         new
                         {
                             ServiceID = 2,
-                            Price = 20.0,
                             Serv = "Cake"
                         },
                         new
                         {
                             ServiceID = 3,
-                            Price = 0.0,
                             Serv = "Decorations"
                         },
                         new
                         {
                             ServiceID = 4,
-                            Price = 100.0,
                             Serv = "Catering"
                         },
                         new
                         {
                             ServiceID = 5,
-                            Price = 30.0,
                             Serv = "Costumes"
                         });
                 });

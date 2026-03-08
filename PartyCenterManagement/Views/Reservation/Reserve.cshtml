@@ -1,0 +1,303 @@
+﻿@model PartyCenterManagement.ViewModels.ReserveViewModel
+
+<div class="container py-5" style="max-width:800px;">
+    <h1 class="mb-4">Reserve Your Package</h1>
+
+    <form asp-action="Reserve" method="post" id="reserveForm">
+
+        @if (Model.IsGuest)
+        {
+            <div class="mb-3">
+                <label class="form-label">First Name</label>
+                <input asp-for="FirstName" class="form-control" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Last Name</label>
+                <input asp-for="LastName" class="form-control" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Phone</label>
+                <input asp-for="PhoneNumber" class="form-control" required />
+            </div>
+        }
+
+        <div class="mb-3">
+            <label class="form-label">Package</label>
+            <select asp-for="PackageID" id="packageSelect" class="form-select" required>
+
+                <option value="">-- Select Package --</option>
+
+                @foreach (var p in Model.Packages)
+                {
+                    <option value="@p.PackageID"
+                            data-price="@p.Price"
+                            data-service-ids="@string.Join(",", p.PackageServices.Select(ps => ps.ServiceID))"
+                            data-max-guests="@p.MaxGuests"
+                            data-max-length="@p.MaxLength">
+                        @p.Name (@p.Price.ToString("0.00") $)
+                    </option>
+                }
+            </select>
+        </div>
+
+
+        <div class="mb-3">
+            <label class="form-label">Date</label>
+            <input asp-for="Date"
+                   type="date"
+                   class="form-control"
+                   min="@DateTime.Today.ToString("yyyy-MM-dd")"
+                   required />
+        </div>
+
+
+        <div class="mb-3">
+    <label class="form-label">Time</label>
+
+    <select asp-for="Time" class="form-select" required>
+        <option value="">-- Select Time --</option>
+
+        @for (int h = 8; h <= 22; h++)
+        {
+            var time = new TimeSpan(h, 0, 0);
+            <option value="@time">@time.ToString(@"hh\:mm")</option>
+        }
+
+    </select>
+</div>
+
+
+        <div class="mb-3">
+            <label class="form-label">Length (hours)</label>
+            <input asp-for="Length"
+                   id="lengthInput"
+                   type="number"
+                   min="1"
+                   class="form-control"
+                   required />
+            <div class="text-danger" id="lengthError"></div>
+        </div>
+
+
+        <div class="mb-3">
+            <label class="form-label">Guest Count</label>
+            <input asp-for="GuestCount"
+                   id="guestInput"
+                   type="number"
+                   min="1"
+                   class="form-control"
+                   required />
+            <div class="text-danger" id="guestError"></div>
+        </div>
+
+
+        <div class="mb-4">
+            <label class="form-label">Additional Services</label>
+
+            <div id="servicesContainer" class="border rounded p-3">
+
+                @foreach (var s in Model.Services)
+                {
+                    <div class="form-check mb-2">
+
+                        <input class="form-check-input service-checkbox"
+                               type="checkbox"
+                               name="ServiceIds"
+                               value="@s.ServiceID"
+                               data-price="@s.Price"
+                               id="service-@s.ServiceID">
+
+                        <label class="form-check-label"
+                               for="service-@s.ServiceID">
+                            @s.Serv (@s.Price.ToString("0.00") $)
+                        </label>
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+
+        <div class="mb-2">
+            <label class="form-label">Package Price</label>
+            <div class="fw-bold fs-5" id="packagePrice">-</div>
+        </div>
+
+        <div class="mb-4">
+            <label class="form-label">Final Price</label>
+            <div class="fw-bold fs-4 text-success" id="finalPrice">-</div>
+        </div>
+
+
+        <div class="mb-4">
+            <label class="form-label">Note</label>
+            <textarea asp-for="Note" class="form-control"></textarea>
+        </div>
+
+
+        <button type="submit"
+                id="reserveBtn"
+                class="btn btn-primary px-4"
+                disabled>
+            Reserve
+        </button>
+
+    </form>
+</div>
+
+
+@section Scripts {
+
+    <script>
+
+        const packageSelect = document.getElementById("packageSelect")
+        if (@Model.PackageID != 0) {
+            packageSelect.value = "@Model.PackageID";
+        }
+        const serviceCheckboxes = document.querySelectorAll(".service-checkbox")
+
+        const guestInput = document.getElementById("guestInput")
+        const lengthInput = document.getElementById("lengthInput")
+
+        const guestError = document.getElementById("guestError")
+        const lengthError = document.getElementById("lengthError")
+
+        const packagePriceDiv = document.getElementById("packagePrice")
+        const finalPriceDiv = document.getElementById("finalPrice")
+
+        const reserveBtn = document.getElementById("reserveBtn")
+
+
+        function updatePackageDetails(){
+
+            const option = packageSelect.selectedOptions[0]
+
+            if(!option.value){
+                packagePriceDiv.textContent = "-"
+                finalPriceDiv.textContent = "-"
+                reserveBtn.disabled = true
+                return
+            }
+
+            const price = parseFloat(option.dataset.price)
+            const maxGuests = parseInt(option.dataset.maxGuests)
+            const maxLength = parseInt(option.dataset.maxLength)
+
+            const includedServices = option.dataset.serviceIds
+                .split(',')
+                .filter(x => x)
+                .map(Number)
+
+
+            serviceCheckboxes.forEach(cb => {
+
+                if(includedServices.includes(Number(cb.value))){
+                    cb.checked = true
+                    cb.disabled = true
+                }
+                else{
+                    cb.checked = false
+                    cb.disabled = false
+                }
+
+            })
+
+
+            guestInput.max = maxGuests
+            lengthInput.max = maxLength
+
+
+            packagePriceDiv.textContent = price.toFixed(2) + " $"
+
+            updatePrice()
+            validateInputs()
+        }
+
+
+
+        function validateInputs(){
+
+            const option = packageSelect.selectedOptions[0]
+
+            if(!option.value){
+                reserveBtn.disabled = true
+                return
+            }
+
+            const maxGuests = parseInt(option.dataset.maxGuests)
+            const maxLength = parseInt(option.dataset.maxLength)
+
+            let valid = true
+
+
+            if(guestInput.value > maxGuests){
+                guestError.textContent = "Maximum guests is " + maxGuests
+                valid = false
+            }
+            else{
+                guestError.textContent = ""
+            }
+
+
+            if(lengthInput.value > maxLength){
+                lengthError.textContent = "Maximum length is " + maxLength + " hours"
+                valid = false
+            }
+            else{
+                lengthError.textContent = ""
+            }
+
+
+            if(!guestInput.value || !lengthInput.value){
+                valid = false
+            }
+
+
+            reserveBtn.disabled = !valid
+        }
+
+
+
+        function updatePrice(){
+
+            const option = packageSelect.selectedOptions[0]
+
+            if(!option.value) return
+
+            let price = parseFloat(option.dataset.price)
+
+            serviceCheckboxes.forEach(cb => {
+
+                if(cb.checked && !cb.disabled){
+
+                    price += parseFloat(cb.dataset.price)
+
+                }
+
+            })
+
+            finalPriceDiv.textContent = price.toFixed(2) + " $"
+
+        }
+
+
+
+        packageSelect.addEventListener("change", updatePackageDetails)
+
+        guestInput.addEventListener("input", validateInputs)
+        lengthInput.addEventListener("input", validateInputs)
+
+        serviceCheckboxes.forEach(cb => {
+            cb.addEventListener("change", updatePrice)
+        })
+
+
+        updatePackageDetails()
+
+    </script>
+
+}

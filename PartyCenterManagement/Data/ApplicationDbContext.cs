@@ -68,17 +68,26 @@ namespace PartyCenterManagement.Data
                 .HasForeignKey(rs => rs.ServiceID);
 
             builder.Entity<Service>().HasData(
-                 new Service { ServiceID = 1, Serv = "Entertainer" },
-                 new Service { ServiceID = 2, Serv = "Cake" },
-                 new Service { ServiceID = 3, Serv = "Decorations" },
-                 new Service { ServiceID = 4, Serv = "Catering" },
-                 new Service { ServiceID = 5, Serv = "Costumes" }
+                 new Service { ServiceID = 1, Serv = "Entertainer", Price = 50 },
+                 new Service { ServiceID = 2, Serv = "Cake", Price = 20 },
+                 new Service { ServiceID = 3, Serv = "Decorations", Price = 0 },
+                 new Service { ServiceID = 4, Serv = "Catering", Price = 100},
+                 new Service { ServiceID = 5, Serv = "Costumes", Price = 30 }
                  );
 
             builder.Entity<Package>().HasData(
                 new Package { PackageID = 1, Name = "Standard", Price = 150, MaxGuests = 40, MaxLength = 2 },
                 new Package { PackageID = 2, Name = "Premium", Price = 250, MaxGuests = 60, MaxLength = 4 },
-                new Package { PackageID = 3, Name = "Ultra", Price = 350 }
+                new Package { PackageID = 3, Name = "Ultra", Price = 400, MaxGuests = 80, MaxLength = 6 }
+            );
+
+            builder.Entity<PackageService>().HasData(
+                new PackageService { PackageID = 1, ServiceID = 3 },
+                new PackageService { PackageID = 2, ServiceID = 3 },
+                new PackageService { PackageID = 2, ServiceID = 1 },
+                new PackageService { PackageID = 3, ServiceID = 3 },
+                new PackageService { PackageID = 3, ServiceID = 1 },
+                new PackageService { PackageID = 3, ServiceID = 4 }
             );
         }
     }
