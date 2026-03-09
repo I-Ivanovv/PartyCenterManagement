@@ -97,5 +97,15 @@ namespace PartyCenterManagement.Services
             .ToListAsync();
             return await reservations;
         }
+
+
+        public async Task CancelReservartionAsync(int id)
+        {
+            var reservation = await _db.Reservations.FindAsync(id);
+            reservation.Status = "Cancelled";
+
+            await _db.SaveChangesAsync();
+
+        }
     }
 }

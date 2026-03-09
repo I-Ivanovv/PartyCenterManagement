@@ -4,74 +4,93 @@
     ViewData["Title"] = "My Reservations";
 }
 
-<div class="container py-5" style="max-width:900px;">
-    <h1 class="mb-4">My Reservations</h1>
+<div class="container py-5">
+    <h1 class="mb-4 text-center">My Reservations</h1>
 
     @if (!Model.Any())
     {
-        <div class="alert alert-info">
+        <div class="alert alert-info text-center">
             You have no reservations yet. <a asp-controller="Reservation" asp-action="Reserve">Make one now!</a>
         </div>
     }
     else
     {
-        <table class="table table-striped table-bordered align-middle">
-            <thead class="table-dark">
-                <tr>
-                    <th>Package</th>
-                    <th>Date</th>
-                    <th>Length (hrs)</th>
-                    <th>Guests</th>
-                    <th>Services</th>
-                    <th>Price</th>
-                    <th>Status</th>
-                    <th>Paid</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var r in Model)
-                {
-                    <tr>
-                        <td>@r.Package.Name</td>
-                        <td>@r.Date.ToString("yyyy-MM-dd-HH")</td>
-                        <td>@r.Length</td>
-                        <td>@r.GuestCount</td>
-                        <td>
-                            @if (r.ReservationServices.Any())
-                            {
-                                <ul class="mb-0">
-                                    @foreach (var s in r.ReservationServices)
+        <div class="row g-4">
+            @foreach (var r in Model)
+            {
+                var withinFiveDays = (r.Date - DateTime.Now).TotalDays <= 5;
+
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header bg-primary text-white text-center fs-4 fw-bold">
+                            @r.Package.Name
+                        </div>
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <div>
+                                <p class="mb-1"><strong>Date:</strong> @($"{r.Date:yyyy-MM-dd} {r.Date:HH\\:mm}")</p>
+                                <p class="mb-1"><strong>Length:</strong> @r.Length hrs</p>
+                                <p class="mb-1"><strong>Guests:</strong> @r.GuestCount</p>
+                                <p class="mb-1">
+                                    <strong>Services:</strong>
+                                    @if (r.ReservationServices.Any())
                                     {
-                                        <li>@s.Service.Serv</li>
+                                        @string.Join(", ", r.ReservationServices.Select(s => s.Service.Serv))
                                     }
-                                </ul>
-                            }
-                            else
+                                    else
+                                    {
+                                        <span>N/A</span>
+                                    }
+                                </p>
+                                <p class="mb-1"><strong>Price:</strong> @r.Price.ToString("C")</p>
+                                <p class="mb-1">
+                                    <strong>Status:</strong>
+                                    @if (r.Status == "Pending")
+                                    {
+                                        <span class="badge bg-warning text-dark">@r.Status</span>
+                                    }
+                                    else if (r.Status == "Confirmed")
+                                    {
+                                        <span class="badge bg-success">@r.Status</span>
+                                    }
+                                    else if (r.Status == "Cancelled")
+                                    {
+                                        <span class="badge bg-danger">@r.Status</span>
+                                    }
+                                </p>
+                                <p class="mb-0"><strong>Paid:</strong> @r.Paid</p>
+                            </div>
+
+                            @if (r.Status != "Cancelled")
                             {
-                                <span>N/A</span>
+                                <div class="mt-3 text-center">
+                                    <form asp-action="CancelReservation" asp-controller="Reservation" method="post">
+                                        <input type="hidden" name="id" value="@r.ReservationID" />
+                                        @if (withinFiveDays)
+                                        {
+                                            <span data-bs-toggle="tooltip" title="Reservations cannot be cancelled within 5 days">
+                                                <button type="submit" class="btn btn-sm btn-danger" disabled>Cancel</button>
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <button type="submit" class="btn btn-sm btn-danger">Cancel</button>
+                                        }
+                                    </form>
+                                </div>
                             }
-                        </td>
-                        <td>@r.Price.ToString("C")</td>
-                        <td>
-                            @if (r.Status == "Pending")
-                            {
-                                <span class="badge bg-warning text-dark">@r.Status</span>
-                            }
-                            else if (r.Status == "Confirmed")
-                            {
-                                <span class="badge bg-success">@r.Status</span>
-                            }
-                            else if (r.Status == "Cancelled")
-                            {
-                                <span class="badge bg-danger">@r.Status</span>
-                            }
-                        </td>
-                        <td>
-                            @r.Paid
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
     }
 </div>
+
+@section Scripts {
+    <script>
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    </script>
+}

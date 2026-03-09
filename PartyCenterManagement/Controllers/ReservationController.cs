@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PartyCenterManagement.Models;
 using PartyCenterManagement.Services;
 using PartyCenterManagement.ViewModels;
@@ -116,5 +117,14 @@ namespace PartyCenterManagement.Controllers
 
         return View(userRes);
     }
-}
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> CancelReservation(int id)
+        {
+            await _reservationServices.CancelReservartionAsync(id);
+
+            return RedirectToAction("MyReservations");
+        }
+    }
 }
