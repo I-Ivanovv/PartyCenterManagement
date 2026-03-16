@@ -60,11 +60,34 @@
                                 <p class="mb-0"><strong>Paid:</strong> @r.Paid</p>
                             </div>
 
-                            @if (r.Status != "Cancelled")
-                            {
-                                <div class="mt-3 text-center">
+                            <div class="mt-3 text-center d-flex justify-content-center gap-2">
+
+                                @if (r.Status != "Cancelled")
+                                {
+                                    @if (withinFiveDays)
+                                    {
+                                        <span data-bs-toggle="tooltip" title="Reservations cannot be edited within 5 days">
+                                            <a class="btn btn-sm btn-secondary disabled">
+                                                Edit
+                                            </a>
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <a asp-controller="Reservation"
+                                           asp-action="Reserve"
+                                           asp-route-id="@r.ReservationID"
+                                           class="btn btn-sm btn-secondary">
+                                            Edit
+                                        </a>
+                                    }
+                                }
+
+                                @if (r.Status != "Cancelled")
+                                {
                                     <form asp-action="CancelReservation" asp-controller="Reservation" method="post">
                                         <input type="hidden" name="id" value="@r.ReservationID" />
+
                                         @if (withinFiveDays)
                                         {
                                             <span data-bs-toggle="tooltip" title="Reservations cannot be cancelled within 5 days">
@@ -76,8 +99,9 @@
                                             <button type="submit" class="btn btn-sm btn-danger">Cancel</button>
                                         }
                                     </form>
-                                </div>
-                            }
+                                }
+
+                            </div>
                         </div>
                     </div>
                 </div>

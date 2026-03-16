@@ -1,9 +1,9 @@
 ﻿@model PartyCenterManagement.ViewModels.ReserveViewModel
-
 <div class="container py-5" style="max-width:800px;">
     <h1 class="mb-4">Reserve Your Package</h1>
 
     <form asp-action="Reserve" method="post" id="reserveForm">
+        <input type="hidden" asp-for="ReservationID" />
 
         @if (Model.IsGuest)
         {
@@ -139,11 +139,8 @@
         </div>
 
 
-        <button type="submit"
-                id="reserveBtn"
-                class="btn btn-primary px-4"
-                disabled>
-            Reserve
+        <button type="submit" class="btn btn-primary">
+            @(Model.ReservationID != null ? "Update Reservation" : "Reserve")
         </button>
 
     </form>

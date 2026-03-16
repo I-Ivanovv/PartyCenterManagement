@@ -6,6 +6,7 @@ namespace PartyCenterManagement.ViewModels
     {
         public List<Package> Packages { get; set; } = new();
         public List<Service> Services { get; set; } = new();
+        public int? ReservationID { get; set; }
 
         public bool IsGuest { get; set; }
 

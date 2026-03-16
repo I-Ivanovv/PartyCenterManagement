@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using PartyCenterManagement.Data;
 using PartyCenterManagement.Models;
+using PartyCenterManagement.Models.ViewModels;
 
 namespace PartyCenterManagement.Services
 {
@@ -106,6 +107,101 @@ namespace PartyCenterManagement.Services
 
             await _db.SaveChangesAsync();
 
+        }
+
+        public async Task<Reservation> GetReservationByIdAsync(int id)
+        {
+            return await _db.Reservations
+                .Include(r => r.ReservationServices)
+                .ThenInclude(rs => rs.Service)
+                .FirstOrDefaultAsync(r => r.ReservationID == id);
+        }
+
+        public async Task UpdateReservationAsync(int reservationId, DateTime dateTime, int length, int guestCount, int packageID, string note, List<Service> extraServices)
+        {
+            var reservation = await _db.Reservations
+                .Include(r => r.ReservationServices)
+                .FirstOrDefaultAsync(r => r.ReservationID == reservationId);
+
+            if (reservation == null)
+                return;
+
+            reservation.Date = dateTime;
+            reservation.Length = length;
+            reservation.GuestCount = guestCount;
+            reservation.PackageID = packageID;
+            reservation.Note = note;
+
+            double packagePrice = await _db.Packages
+                .Where(p => p.PackageID == packageID)
+                .Select(p => p.Price)
+                .FirstAsync();
+
+            List<Service> packageServ = _db.PackageServices
+                .Where(p => p.PackageID == packageID)
+                .Select(p => p.Service)
+                .ToList();
+
+            double servicesPrice = extraServices.Sum(s => s.Price);
+
+            packageServ.AddRange(extraServices);
+
+            reservation.Price = packagePrice + servicesPrice;
+
+            _db.ReservationServices.RemoveRange(reservation.ReservationServices);
+
+            var reservationServices = packageServ
+                .Select(s => new ReservationService
+                {
+                    ReservationID = reservation.ReservationID,
+                    ServiceID = s.ServiceID
+                })
+                .ToList();
+
+            await _db.ReservationServices.AddRangeAsync(reservationServices);
+
+            await _db.SaveChangesAsync();
+        }
+
+        public async Task<AdminDashboardViewModel> GetDashboardStats(DateTime? start, DateTime? end)
+        {
+            var query = _db.Reservations
+                .Include(r => r.Package)
+                .AsQueryable();
+
+            if (start != null)
+            {
+                start = start.Value.Date;
+                query = query.Where(r => r.Date >= start);
+            }
+
+            if (end != null)
+            {
+                end = end.Value.Date.AddDays(1).AddTicks(-1);
+                query = query.Where(r => r.Date <= end);
+            }
+
+            var reservations = await query.ToListAsync();
+
+            var totalReservations = reservations.Count;
+            var revenue = reservations.Sum(r => r.Price);
+            var mostPopular = reservations
+                .GroupBy(r => r.Package.Name)
+                .OrderByDescending(g => g.Count())
+                .FirstOrDefault()?.Key ?? "N/A";
+            var upcoming = reservations
+                .Where(r => r.Status != "Cancelled")
+                .Count(r => r.Date > DateTime.Now);
+
+            return new AdminDashboardViewModel
+            {
+                TotalReservations = totalReservations,
+                TotalRevenue = revenue,
+                MostPopularPackage = mostPopular,
+                UpcomingReservations = upcoming,
+                StartDate = start,
+                EndDate = end
+            };
         }
     }
 }

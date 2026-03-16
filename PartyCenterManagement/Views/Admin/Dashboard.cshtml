@@ -1,0 +1,78 @@
+﻿@model PartyCenterManagement.Models.ViewModels.AdminDashboardViewModel
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container py-5">
+
+    <h1 class="text-center mb-5">Admin Dashboard</h1>
+
+
+    <form method="get" class="row g-3 mb-5 justify-content-center">
+
+        <div class="col-md-3">
+            <label>Start Date</label>
+            <input type="date" name="startDate" class="form-control" value="@Model.StartDate?.ToString("yyyy-MM-dd")">
+        </div>
+
+        <div class="col-md-3">
+            <label>End Date</label>
+            <input type="date" name="endDate" class="form-control" value="@Model.EndDate?.ToString("yyyy-MM-dd")">
+        </div>
+
+        <div class="col-md-2 align-self-end d-flex gap-2">
+            <button type="submit" class="btn btn-primary w-100">Filter</button>
+
+            <a href="@Url.Action("Dashboard", "Admin")" class="btn btn-secondary w-100">Reset</a>
+        </div>
+
+    </form>
+
+
+    <div class="row g-4 text-center">
+
+
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5>Total Reservations</h5>
+                    <h2>@Model.TotalReservations</h2>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5>Total Revenue</h5>
+                    <h2>@Model.TotalRevenue.ToString("C")</h2>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5>Most Popular Package</h5>
+                    <h4>@Model.MostPopularPackage</h4>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5>Upcoming Reservations</h5>
+                    <h2>@Model.UpcomingReservations</h2>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>

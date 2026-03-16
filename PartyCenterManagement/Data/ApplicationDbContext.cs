@@ -72,7 +72,8 @@ namespace PartyCenterManagement.Data
                  new Service { ServiceID = 2, Serv = "Cake", Price = 20 },
                  new Service { ServiceID = 3, Serv = "Decorations", Price = 0 },
                  new Service { ServiceID = 4, Serv = "Catering", Price = 100},
-                 new Service { ServiceID = 5, Serv = "Costumes", Price = 30 }
+                 new Service { ServiceID = 5, Serv = "Costumes", Price = 30 },
+                 new Service { ServiceID = 6, Serv = "Photography", Price = 80 }
                  );
 
             builder.Entity<Package>().HasData(

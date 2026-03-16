@@ -24,15 +24,49 @@ namespace PartyCenterManagement.Controllers
             _userManager = userManager;
         }
 
-        public async Task<IActionResult> Reserve(int? packageId)
+        public async Task<IActionResult> Reserve(int? packageId, int? id)
         {
             var model = new ReserveViewModel
             {
                 Packages = await _packageServices.GetPackages(),
                 Services = await _packageServices.GetServices(),
-                IsGuest = (await _userManager.GetUserAsync(User)) == null,
-                PackageID = packageId ?? 0
+                IsGuest = (await _userManager.GetUserAsync(User)) == null
             };
+
+            if (id != null)
+            {
+                var reservation = await _reservationServices.GetReservationByIdAsync(id.Value);
+
+                if (reservation == null)
+                    return NotFound();
+
+                if ((reservation.Date - DateTime.Now).TotalDays <= 5)
+                {
+                    TempData["Error"] = "Reservations cannot be edited within 5 days.";
+                    return RedirectToAction("MyReservations");
+                }
+                if (reservation.Status == "Cancelled")
+                {
+                    TempData["Error"] = "Cancelled reservations cannot be edited.";
+                    return RedirectToAction("MyReservations");
+                }
+
+                model.ReservationID = reservation.ReservationID;
+                model.PackageID = reservation.PackageID;
+                model.Date = reservation.Date.Date;
+                model.Time = reservation.Date.TimeOfDay;
+                model.Length = reservation.Length;
+                model.GuestCount = reservation.GuestCount;
+                model.Note = reservation.Note;
+
+                model.ServiceIds = reservation.ReservationServices
+                    .Select(s => s.ServiceID)
+                    .ToList();
+            }
+            else
+            {
+                model.PackageID = packageId ?? 0;
+            }
 
             return View(model);
         }
@@ -77,29 +111,56 @@ namespace PartyCenterManagement.Controllers
 
             DateTime reservationDateTime = model.Date.Value.Date + model.Time.Value;
 
-            if (user != null)
+            if (model.ReservationID != null)
             {
-                await _reservationServices.CreateReservationUser(
+                var reservation = await _reservationServices.GetReservationByIdAsync(model.ReservationID.Value);
+
+                if ((reservation.Date - DateTime.Now).TotalDays <= 5)
+                {
+                    TempData["Error"] = "Reservations cannot be edited within 5 days.";
+                    return RedirectToAction("MyReservations");
+                }
+                if (reservation.Status == "Cancelled")
+                {
+                    TempData["Error"] = "Cancelled reservations cannot be edited.";
+                    return RedirectToAction("MyReservations");
+                }
+
+                await _reservationServices.UpdateReservationAsync(
+                    model.ReservationID.Value,
                     reservationDateTime,
                     model.Length,
                     model.GuestCount,
                     model.PackageID,
                     model.Note,
-                    user.Id,
                     extraServices);
             }
             else
             {
-                await _reservationServices.CreateReservationGuest(
-                    reservationDateTime,
-                    model.Length,
-                    model.GuestCount,
-                    model.PackageID,
-                    model.Note,
-                    model.FirstName,
-                    model.LastName,
-                    model.PhoneNumber,
-                    extraServices);
+                if (user != null)
+                {
+                    await _reservationServices.CreateReservationUser(
+                        reservationDateTime,
+                        model.Length,
+                        model.GuestCount,
+                        model.PackageID,
+                        model.Note,
+                        user.Id,
+                        extraServices);
+                }
+                else
+                {
+                    await _reservationServices.CreateReservationGuest(
+                        reservationDateTime,
+                        model.Length,
+                        model.GuestCount,
+                        model.PackageID,
+                        model.Note,
+                        model.FirstName,
+                        model.LastName,
+                        model.PhoneNumber,
+                        extraServices);
+                }
             }
 
             return RedirectToAction("Index", "Home");

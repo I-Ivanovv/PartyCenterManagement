@@ -28,5 +28,97 @@ namespace PartyCenterManagement.Services
             var services = _db.Services.OrderBy(s => s.Price).ToListAsync();
             return await services;
         }
+
+        public async Task UpdatePackage(int id, double price, int guests, int length)
+        {
+            var package = await _db.Packages.FindAsync(id);
+
+            package.Price = price;
+            package.MaxGuests = guests;
+            package.MaxLength = length;
+
+            await _db.SaveChangesAsync();
+        }
+
+        public async Task UpdateService(int id, string name, double price)
+        {
+            var service = await _db.Services.FindAsync(id);
+
+            service.Serv = name;
+            service.Price = price;
+
+            await _db.SaveChangesAsync();
+        }
+
+        public async Task CreatePackage(string name, double price, int maxGuests, int maxLength)
+        {
+            var package = new Package
+            {
+                Name = name,
+                Price = price,
+                MaxGuests = maxGuests,
+                MaxLength = maxLength
+            };
+
+            _db.Packages.Add(package);
+            await _db.SaveChangesAsync();
+        }
+
+        public async Task DeletePackage(int id)
+        {
+            var package = await _db.Packages.FindAsync(id);
+
+            _db.Packages.Remove(package);
+            await _db.SaveChangesAsync();
+        }
+
+        public async Task CreateService(string name, double price)
+        {
+            var service = new Service
+            {
+                Serv = name,
+                Price = price
+            };
+
+            _db.Services.Add(service);
+            await _db.SaveChangesAsync();
+        }
+
+        public async Task DeleteService(int id)
+        {
+            var service = await _db.Services.FindAsync(id);
+
+            _db.Services.Remove(service);
+            await _db.SaveChangesAsync();
+        }
+
+        public async Task AddServiceToPackage(int packageId, int serviceId)
+        {
+            bool exists = await _db.PackageServices
+                .AnyAsync(ps => ps.PackageID == packageId && ps.ServiceID == serviceId);
+
+            if (!exists)
+            {
+                _db.PackageServices.Add(new PackageService
+                {
+                    PackageID = packageId,
+                    ServiceID = serviceId
+                });
+
+                await _db.SaveChangesAsync();
+            }
+        }
+
+        public async Task RemoveServiceFromPackage(int packageId, int serviceId)
+        {
+            var ps = await _db.PackageServices
+                .FirstOrDefaultAsync(x => x.PackageID == packageId && x.ServiceID == serviceId);
+
+            if (ps != null)
+            {
+                _db.PackageServices.Remove(ps);
+                await _db.SaveChangesAsync();
+            }
+        }
     }
 }

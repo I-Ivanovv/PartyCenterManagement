@@ -32,6 +32,19 @@
                                 <a class="nav-link" asp-area="" asp-controller="Reservation" asp-action="MyReservations">My Reservations</a>
                             </li>
                         }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Admin" asp-action="Dashboard">
+                                    Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Admin" asp-action="PackagesAndServices">
+                                    Edit Packages & Services
+                                </a>
+                            </li>
+                        }
                     </ul>
 
                     <a class="navbar-brand position-absolute start-50 translate-middle-x"
