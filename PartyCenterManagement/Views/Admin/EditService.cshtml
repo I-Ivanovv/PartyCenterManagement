@@ -1,0 +1,34 @@
+﻿@model PartyCenterManagement.Models.ViewModels.UpsertServiceViewModel
+
+@{
+    ViewData["Title"] = "Edit Service";
+}
+
+<div class="container py-5">
+    <h2 class="text-center mb-4">Edit Service</h2>
+
+    <div class="card shadow-sm rounded-3 p-4 mx-auto" style="max-width: 500px;">
+        <form asp-action="EditService" method="post">
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" asp-for="ServiceID" />
+
+            <div class="mb-3">
+                <label asp-for="Serv" class="form-label"></label>
+                <input asp-for="Serv" class="form-control" />
+                <span asp-validation-for="Serv" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Price" class="form-label"></label>
+                <input asp-for="Price" class="form-control" type="number" step="0.01" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                <a asp-action="PackagesAndServices" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>

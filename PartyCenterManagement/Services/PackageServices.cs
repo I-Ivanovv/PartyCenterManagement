@@ -29,10 +29,13 @@ namespace PartyCenterManagement.Services
             return await services;
         }
 
-        public async Task UpdatePackage(int id, double price, int guests, int length)
+        public async Task UpdatePackage(int id, string name, double price, int guests, int length)
         {
             var package = await _db.Packages.FindAsync(id);
 
+            if (package == null) return;
+
+            package.Name = name;
             package.Price = price;
             package.MaxGuests = guests;
             package.MaxLength = length;
@@ -43,6 +46,7 @@ namespace PartyCenterManagement.Services
         public async Task UpdateService(int id, string name, double price)
         {
             var service = await _db.Services.FindAsync(id);
+            if (service == null) return;
 
             service.Serv = name;
             service.Price = price;

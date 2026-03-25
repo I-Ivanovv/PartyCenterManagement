@@ -1,0 +1,51 @@
+﻿@model PartyCenterManagement.Models.ViewModels.UpsertServiceViewModel
+
+@{
+    ViewData["Title"] = Model.ServiceID == 0 ? "Create Service" : "Edit Service";
+}
+
+<div class="container py-5">
+    <h2 class="text-center mb-4">
+        @(Model.ServiceID == 0 ? "Create Service" : "Edit Service")
+    </h2>
+
+    <div class="card shadow-sm rounded-3 p-4 mx-auto" style="max-width: 500px;">
+        <form asp-action="UpsertService" method="post">
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+            <input type="hidden" asp-for="ServiceID" />
+
+            <!-- Service Name -->
+            <div class="mb-3">
+                <label asp-for="Serv" class="form-label"></label>
+                <input asp-for="Serv" class="form-control" />
+                <span asp-validation-for="Serv" class="text-danger"></span>
+            </div>
+
+            <!-- Price -->
+            <div class="mb-3">
+                <label asp-for="Price" class="form-label"></label>
+                <input asp-for="Price" class="form-control" type="number" step="0.01" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex justify-content-between mt-4">
+                <a asp-action="PackagesAndServices" class="btn btn-secondary">
+                    Cancel
+                </a>
+
+                <button type="submit" class="btn btn-primary">
+                    @(Model.ServiceID == 0 ? "Create" : "Save Changes")
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

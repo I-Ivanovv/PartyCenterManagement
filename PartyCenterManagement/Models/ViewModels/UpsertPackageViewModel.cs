@@ -1,8 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace PartyCenterManagement.Models
+﻿namespace PartyCenterManagement.Models.ViewModels
 {
-    public class Package
+    public class UpsertPackageViewModel
     {
         public int PackageID { get; set; }
 
@@ -11,6 +9,8 @@ namespace PartyCenterManagement.Models
         public int MaxGuests { get; set; }
         public int MaxLength { get; set; }
 
-        public ICollection<PackageService>? PackageServices { get; set; }
+        public List<int> SelectedServiceIds { get; set; } = new List<int>();
+
+        public List<Service>? AllServices { get; set; }
     }
 }
