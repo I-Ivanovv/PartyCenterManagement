@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PartyCenterManagement.Models;
 using PartyCenterManagement.Models.ViewModels;
 using PartyCenterManagement.Services;
+using System.Data;
 
 namespace PartyCenterManagement.Controllers
 {
@@ -11,11 +13,13 @@ namespace PartyCenterManagement.Controllers
     {
         private readonly PackageServices _packageServices;
         private readonly ReservationServices _reservationServices;
+        private readonly UserProfileService _userProfileService;
 
-        public AdminController(PackageServices packageServices, ReservationServices reservationServices)
+        public AdminController(PackageServices packageServices, ReservationServices reservationServices,UserProfileService userProfileService)
         {
             _packageServices = packageServices;
             _reservationServices = reservationServices;
+            _userProfileService = userProfileService;
 
         }
         public async Task<IActionResult> Dashboard(DateTime? startDate, DateTime? endDate)
@@ -204,6 +208,80 @@ namespace PartyCenterManagement.Controllers
             }
 
             return RedirectToAction("PackagesAndServices");
+        }
+
+        public async Task<IActionResult> Users()
+        {
+            var users = await _userProfileService.GetAllIdentityUsersAsync();
+            var profiles = await _userProfileService.GetAllUserProfilesAsync();
+
+            var list = new List<UserViewModel>();
+
+            foreach (var u in users)
+            {
+                var profile = profiles.FirstOrDefault(p => p.UserID == u.Id);
+                var role = await _userProfileService.GetUserRoleAsync(u);
+
+                list.Add(new UserViewModel
+                {
+                    UserID = u.Id,
+                    Email = u.Email,
+                    PhoneNumber = u.PhoneNumber,
+                    FirstName = profile?.FirstName,
+                    LastName = profile?.LastName,
+                    Role = role.FirstOrDefault()
+                });
+            }
+
+            return View(list);
+        }
+        [HttpPost]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            await _userProfileService.DeleteUserAsync(id);
+
+            return RedirectToAction("Users");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditUser(string id)
+        {
+            var user = await _userProfileService.GetIdentityUserAsync(id);
+            if (user == null) return NotFound();
+
+            var profile = await _userProfileService.GetUserProfileAsync(user);
+            var role = await _userProfileService.GetUserRoleAsync(user);
+
+            var vm = new UserViewModel
+            {
+                UserID = user.Id,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                FirstName = profile?.FirstName,
+                LastName = profile?.LastName,
+                Role = role.FirstOrDefault() // assuming only 1 role per user
+            };
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditUser(UserViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = await _userProfileService.GetIdentityUserAsync(model.UserID);
+            if (user == null) return NotFound();
+
+            await _userProfileService.EditIdentityUserAsync(user, model.PhoneNumber, model.Role);
+
+            var profile = await _userProfileService.GetUserProfileAsync(user);
+            if (profile != null)
+                await _userProfileService.EditUserProfileAsync(profile, model.FirstName, model.LastName);
+
+            return RedirectToAction("Users");
         }
     }
 }

@@ -10,7 +10,7 @@
     @if (SignInManager.IsSignedIn(User))
     {
         var identityUser = await UserManager.GetUserAsync(User);
-        var profile = await _userProfileService.GetUserAsync(identityUser);
+        var profile = await _userProfileService.GetUserProfileAsync(identityUser);
 
         <li class="nav-item">
             <a class="nav-link"

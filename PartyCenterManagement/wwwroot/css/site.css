@@ -124,6 +124,9 @@ a {
     border-color: var(--accent);
     color: #fff;
     transition: background-color 0.2s, border-color 0.2s;
+    border-radius: 10px;
+    font-weight: 600;
+    padding: 0.55rem 1.2rem;
 }
 
     .btn-accent:hover {

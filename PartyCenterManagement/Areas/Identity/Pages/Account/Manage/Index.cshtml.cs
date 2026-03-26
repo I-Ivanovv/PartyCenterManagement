@@ -76,7 +76,7 @@ namespace PartyCenterManagement.Areas.Identity.Pages.Account.Manage
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            var userPr = await _ups.GetUserAsync(user);
+            var userPr = await _ups.GetUserProfileAsync(user);
                
             
             Username = userName;
@@ -114,12 +114,12 @@ namespace PartyCenterManagement.Areas.Identity.Pages.Account.Manage
                 await LoadAsync(user);
                 return Page();
             }
-            var userPr = await _ups.GetUserAsync(user);
+            var userPr = await _ups.GetUserProfileAsync(user);
             var first = userPr.FirstName;
             var last = userPr.LastName;
             if (Input.FirstName != first || Input.LastName != last)
             {
-                await _ups.EditUserProfile(userPr,Input.FirstName,Input.LastName);
+                await _ups.EditUserProfileAsync(userPr,Input.FirstName,Input.LastName);
             }
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             if (Input.PhoneNumber != phoneNumber)

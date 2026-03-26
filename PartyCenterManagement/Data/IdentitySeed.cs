@@ -48,7 +48,7 @@ namespace PartyCenterManagement.Data
                 }
                 
             }
-            if (await userProfileService.GetUserAsync(user) == null)
+            if (await userProfileService.GetUserProfileAsync(user) == null)
             {
                 await userProfileService.CreateUserProfileAsync(user, "Admin", "User");
             }
