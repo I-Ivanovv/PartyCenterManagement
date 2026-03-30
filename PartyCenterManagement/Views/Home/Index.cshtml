@@ -1,92 +1,154 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-<body>
-    <div class="hero">
-        <img src="~/images/background1.png" alt="Party background" class="hero-img">
 
-        <div class="hero-overlay">
-            <div class="hero-content">
+<section class="hero-wrapper position-relative overflow-hidden" style="min-height: 90vh; margin-top: -1rem;">
+    @* margin-top: -1.5rem pulls it up to meet the navbar if your layout has padding *@
 
-                <div class="hero-left">
-                    <p class="hero-subtitle">
-                        THE BEST <br />PARTY EXPERIENCE <br />
+    <img src="~/images/background1.png" alt="Party background" class="position-absolute w-100 h-100" style="object-fit: cover; z-index: 1; top: 0; left: 0;">
+
+    <div class="container position-relative h-100 d-flex align-items-center" style="z-index: 2; min-height: 90vh;">
+        <div class="row w-100">
+            <div class="col-lg-6">
+                <div class="py-5">
+                    <span class="badge rounded-pill bg-soft-primary text-primary px-3 py-2 mb-3 shadow-sm">Premium Event Hosting</span>
+                    <h1 class="display-3 fw-black text-dark mb-4">
+                        THE BEST <br />
+                        <span class="text-primary">PARTY EXPERIENCE</span> <br />
                         YOU CAN GET!
-                    </p>
+                    </h1>
+                    <p class="text-muted fs-5 mb-5 w-75">Join the fun and create memories that last a lifetime with our custom party planning.</p>
 
-                    <a href="@Url.Action("Reserve", "Reservation")" class="btn btn-lg btn-primary hero-button">
-                        Reserve
+                    <a href="@Url.Action("Reserve", "Reservation")" class="btn btn-primary btn-lg rounded-pill px-5 py-3 shadow-lg hover-up">
+                        Start Celebrating <i class="bi bi-arrow-right ms-2"></i>
                     </a>
                 </div>
-
-
             </div>
         </div>
     </div>
-    <div class="hero-big">
-        <img src="~/images/background2.png" alt="Party background" class="hero-img">
+</section>
 
-        <div class="hero-overlay">
-            <div class="hero-content">
+<section class="about-section position-relative py-5">
+    <div class="container py-lg-5">
+        @* Glassmorphism applied to the card container *@
+        <div class="row g-0 rounded-5 overflow-hidden shadow-lg border-0" style="background: rgba(255,255,255,0.7); backdrop-filter: blur(10px);">
+            <div class="col-lg-6">
+                <img src="~/images/background2.png" alt="Party Center" class="w-100 h-100" style="object-fit: cover; min-height: 550px;">
+            </div>
 
-                <div class="hero-right hero-text-box">
-                    <h2 class="hero-section-title" style="color:#262626">Why Party Animals?</h2>
+            <div class="col-lg-6 d-flex align-items-center p-4 p-md-5">
+                <div class="about-content">
+                    <h2 class="display-5 fw-black mb-4" style="color: var(--primary-dark)">Why Party Animals?</h2>
 
-                    <p>
-                        Party Animals is the perfect place to celebrate any special occasion.
-                        We organize children’s parties, birthdays, themed celebrations, private parties,
-                        family gatherings, and many other joyful events.
-                    </p>
-
-                    <p>
-                        Our mission is to turn every celebration into an unforgettable memory.
-                        We offer several party packages to suit your needs - Standard, Premium,
-                        and Ultra - designed for different group sizes and event durations.
-                        Whether you are planning a small gathering or a larger celebration,
-                        we have the right option for you.
-                    </p>
-
-                    <p>
-                        To make your party even more exciting, we provide a variety of additional
-                        services such as entertainers, cakes, decorations, catering, and costumes.
-                        Our team takes care of the details so you and your guests can simply enjoy
-                        the celebration.
-                    </p>
-
-                    <p>
-                        At Party Animals, every party becomes a fun and memorable experience.
-                        We look forward to celebrating with you!
-                    </p>
-                </div>
-        </div>
-    </div>
-    </div>
-    <section class="contact-info py-5">
-        <div class="container">
-            <div class="row g-4 text-center">
-
-                <div class="col-md-4">
-                    <div class="info-box">
-                        <h5>📍 Location</h5>
-                        <p>123 Party Street Fun City</p>
+                    <div class="mb-4">
+                        <p class="text-muted leading-relaxed">
+                            Party Animals is the perfect place to celebrate any special occasion.
+                            We organize children’s parties, birthdays, and private events with a focus on
+                            unforgettable memories.
+                        </p>
+                        <p class="text-muted leading-relaxed">
+                            Choose from our <strong>Standard, Premium, or Ultra</strong> packages,
+                            designed to fit any group size and duration.
+                        </p>
                     </div>
-                </div>
 
-                <div class="col-md-4">
-                    <div class="info-box">
-                        <h5>📞 Phone</h5>
-                        <p>+359 888 123 456</p>
+                    <div class="row g-3 mb-4">
+                        <div class="col-6">
+                            <div class="p-3 border-0 rounded-4" style="background: rgba(108, 92, 231, 0.1);">
+                                <h6 class="fw-bold mb-1 text-primary">Custom Decor</h6>
+                                <small class="text-muted">Themed magic for every room.</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 border-0 rounded-4" style="background: rgba(253, 121, 168, 0.1);">
+                                <h6 class="fw-bold mb-1 text-accent">Full Catering</h6>
+                                <small class="text-muted">Delicious cakes and snacks.</small>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <div class="col-md-4">
-                    <div class="info-box">
-                        <h5>✉ Email</h5>
-                        <p>contact@partyanimals.com</p>
-                    </div>
+                    <p class="small text-muted italic mb-0">
+                        Our team takes care of the details so you and your guests can simply enjoy the celebration.
+                    </p>
                 </div>
-
             </div>
         </div>
-    </section>
-</body>
+    </div>
+</section>
+
+<section class="contact-info py-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="glass-card p-4 text-center border-0 shadow-sm transition hover-up h-100">
+                    <div class="icon-circle bg-soft-primary text-primary mx-auto mb-3">
+                        <i class="bi bi-geo-alt-fill fs-4"></i>
+                    </div>
+                    <h6 class="fw-bold">Our Venue</h6>
+                    <p class="text-muted small mb-0">123 Party Street, Fun City</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="glass-card p-4 text-center border-0 shadow-sm transition hover-up h-100">
+                    <div class="icon-circle bg-soft-accent text-accent mx-auto mb-3">
+                        <i class="bi bi-telephone-fill fs-4"></i>
+                    </div>
+                    <h6 class="fw-bold">Call Anytime</h6>
+                    <p class="text-muted small mb-0">+359 888 123 456</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="glass-card p-4 text-center border-0 shadow-sm transition hover-up h-100">
+                    <div class="icon-circle bg-soft-primary text-primary mx-auto mb-3">
+                        <i class="bi bi-envelope-heart-fill fs-4"></i>
+                    </div>
+                    <h6 class="fw-bold">Email Us</h6>
+                    <p class="text-muted small mb-0">contact@partyanimals.com</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Ensures the image fills the space right to the edges */
+    .hero-wrapper img {
+        top: 0;
+        left: 0;
+    }
+
+    .fw-black {
+        font-weight: 900;
+    }
+
+    .bg-soft-primary {
+        background-color: rgba(108, 92, 231, 0.1);
+    }
+
+    .bg-soft-accent {
+        background-color: rgba(253, 121, 168, 0.1);
+    }
+
+    .leading-relaxed {
+        line-height: 1.8;
+    }
+
+    .icon-circle {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .hover-up {
+        transition: transform 0.3s ease;
+    }
+
+        .hover-up:hover {
+            transform: translateY(-5px);
+        }
+</style>

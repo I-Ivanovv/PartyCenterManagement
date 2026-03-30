@@ -26,12 +26,125 @@
 /* --------------------------
    2. Global Styles
 --------------------------- */
+/* --------------------------
+   Modern Party-Themed Body
+--------------------------- */
 body {
+    margin: 0;
+    min-height: 100vh;
     color: var(--text-primary);
-    font-family: 'Inter', 'Segoe UI', sans-serif;
-    background: radial-gradient(circle at 20% 20%, #f5f4ff, #ecebff); 
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    /* Animated Mesh Gradient Background */
+    background: linear-gradient(135deg, #f1f1ff 0%, #e0defa 50%, #d1fff8 100%);
+    background-attachment: fixed;
+    overflow-x: hidden;
+    position: relative;
+    overflow-x: hidden;
 }
 
+/* --------------------------
+   Floating Confetti Objects
+--------------------------- */
+/* --------------------------
+   Floating Confetti Objects
+--------------------------- */
+/* ==========================
+   Improved Floating Objects
+   ========================== */
+.confetti-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none; /* Allows clicking through */
+    z-index: 1; /* Sits above body background, but below main content */
+    overflow: hidden;
+}
+
+.confetti {
+    position: absolute;
+    width: 16px; /* slightly larger for shapes */
+    height: 16px;
+    opacity: 0.3; /* Subtle transparency */
+    animation: confetti-float linear infinite;
+    bottom: -50px; /* Start off-screen */
+}
+
+    /* --- Shape Variants --- */
+    /* (We use SVG masks to define the shape in CSS) */
+    .confetti.square {
+        background-color: var(--primary-light);
+        border-radius: 2px;
+    }
+
+    .confetti.circle {
+        background-color: var(--accent);
+        border-radius: 50%;
+    }
+
+    .confetti.star {
+        background-color: #ffd700; /* Gold */
+        -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"/></svg>');
+        mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"/></svg>');
+        mask-size: contain;
+        -webkit-mask-size: contain;
+    }
+
+    .confetti.streamer {
+        background-color: var(--primary);
+        width: 8px;
+        height: 30px;
+        border-radius: 4px;
+        transform: rotate(15deg);
+    }
+
+/* --- Animation Speed Variants --- */
+.speed-slow {
+    animation-duration: 25s;
+}
+
+.speed-medium {
+    animation-duration: 18s;
+}
+
+.speed-fast {
+    animation-duration: 12s;
+}
+
+/* --- The Animation --- */
+@keyframes confetti-float {
+    0% {
+        transform: translateY(0) rotate(0deg) translateX(0);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 0.3;
+    }
+
+    90% {
+        opacity: 0.3;
+    }
+
+    100% {
+        /* Add slight horizontal drift for a natural fall */
+        transform: translateY(-115vh) rotate(1080deg) translateX(50px);
+        opacity: 0;
+    }
+}
+
+/* --------------------------
+   Glassmorphism Card Effect
+--------------------------- */
+.glass-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(108, 92, 231, 0.06);
+}
 a {
     color: var(--primary);
     text-decoration: none;
@@ -639,4 +752,303 @@ button, .btn {
         color: #ffffff;
         font-weight: 600;
         text-align: center;
+    }
+
+.card-header-theme {
+    background: var(--primary);
+    color: white;
+    font-weight: 700;
+    text-align: center;
+}
+
+/* ==========================
+   Edit User Page Enhancements
+========================== */
+
+/* Card */
+.edit-user-card {
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+}
+
+/* Header */
+.edit-user-header {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    border-radius:8px;
+    color: white;
+    font-weight: 700;
+    text-align: center;
+    padding: 1rem;
+    font-size: 1.2rem;
+    letter-spacing: 0.5px;
+}
+
+/* Labels */
+.custom-label {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.3rem;
+}
+
+/* Inputs */
+.custom-input {
+    border-radius: 10px !important;
+    padding: 0.55rem 0.75rem;
+    transition: all 0.2s ease;
+}
+
+    .custom-input:focus {
+        transform: scale(1.01);
+    }
+
+/* Spacing improvement */
+.card-body form > div {
+    margin-bottom: 0.2rem;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border: none;
+    color: #fff;
+    border-radius: 10px;
+    font-weight: 600;
+    padding: 0.55rem 1.2rem;
+    transition: all 0.2s ease;
+}
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        color: white;
+        transform: translateY(-1px);
+    }
+
+/* Cancel button (solid gray + better hover) */
+.btn-cancel {
+    background-color: #6c757d;
+    color: white;
+    border-radius: 10px;
+    font-weight: 600;
+    padding: 0.55rem 1.2rem;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+    .btn-cancel:hover {
+        background-color: #5a6268; /* darker gray */
+        color: white;
+        transform: translateY(-1px);
+    }
+
+#servicesContainer {
+    transition: all 0.2s ease;
+}
+
+    #servicesContainer:hover {
+        box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    }
+
+/* USERS TABLE */
+.users-table thead {
+    background: #5649C0;
+    color: white;
+    font-weight: 600;
+}
+
+.users-table tbody tr:nth-child(even) {
+    background: #f8f8ff;
+}
+
+.users-table tbody tr:hover {
+    background: rgba(108, 92, 231, 0.08);
+    transition: 0.2s;
+}
+
+.users-table td, .users-table th {
+    padding: 0.6rem 0.8rem;
+    text-align: center;
+}
+
+/* CARD */
+.users-card {
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+/* ROLE BADGES */
+.role-admin {
+    background: #ff7675;
+    color: white;
+    padding: 0.4rem 0.7rem;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.role-employee {
+    background: #00cec9;
+    color: white;
+    padding: 0.4rem 0.7rem;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.role-client {
+    background: #6c5ce7;
+    color: white;
+    padding: 0.4rem 0.7rem;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+/* Custom Badge Styles */
+.bg-soft-primary {
+    background-color: rgba(108, 92, 231, 0.12) !important;
+}
+
+.text-teal {
+    color: #00B2B0 !important;
+}
+
+.bg-soft-teal {
+    background-color: rgba(0, 206, 201, 0.12) !important;
+}
+
+/* Modern Table Enhancements */
+.table thead th {
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    border: none;
+}
+
+.table tbody td {
+    padding-top: 1.2rem;
+    padding-bottom: 1.2rem;
+    border-color: #f8f9fa;
+}
+
+/* Tab button styling */
+.nav-pills .nav-link {
+    border-radius: 50px;
+    background: #fff;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    transition: all 0.3s ease;
+}
+
+    .nav-pills .nav-link.active {
+        background: var(--primary) !important;
+        color: white !important;
+        border-color: var(--primary);
+        transform: scale(1.05);
+    }
+
+/* Button Outline Hover */
+.btn-outline-primary:hover {
+    background-color: var(--primary);
+    color: white;
+}
+
+/* --------------------------
+   Modern Table Header Style
+--------------------------- */
+.thead-modern {
+    /* Subtle background tint instead of solid dark violet */
+    background-color: rgba(108, 92, 231, 0.04);
+    border-bottom: 2px solid rgba(108, 92, 231, 0.1);
+}
+
+    .thead-modern th {
+        /* Typography tweaks */
+        text-transform: uppercase;
+        font-size: 0.75rem; /* Smaller font */
+        font-weight: 700; /* Bolder weight */
+        letter-spacing: 0.08em; /* Space between letters for readability */
+        color: var(--primary-dark); /* Using your theme's dark violet */
+        padding-top: 1.25rem !important;
+        padding-bottom: 1.25rem !important;
+        border: none;
+    }
+
+/* Optional: Add a subtle separator between header and body */
+.table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+/* Align icons in headers */
+.thead-modern th i {
+    font-size: 0.9rem;
+    vertical-align: middle;
+    opacity: 0.7;
+}
+
+/* Ensure the first and last header cells respect the card radius */
+.table-responsive {
+    border-radius: 12px;
+}
+header, main, footer {
+    position: relative;
+    z-index: 2; /* This puts your content ABOVE the confetti */
+}
+
+/* Typography Enhancement */
+.fw-black {
+    font-weight: 800;
+}
+
+/* Package Card Customizations */
+.package-card {
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+    .package-card:hover {
+        transform: translateY(-10px);
+    }
+
+.package-header {
+    background: linear-gradient(135deg, rgba(108, 92, 231, 0.1), rgba(0, 206, 201, 0.05));
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Badge Styling */
+.bg-soft-primary {
+    background-color: rgba(108, 92, 231, 0.15) !important;
+}
+
+/* A La Carte Box */
+.info-box-vert {
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 16px;
+    transition: all 0.2s ease;
+}
+
+    .info-box-vert:hover {
+        background: white;
+        box-shadow: 0 10px 20px rgba(108, 92, 231, 0.1);
+    }
+
+/* Fixes the Jumping Buttons */
+.card-body.d-flex.flex-column {
+    min-height: 450px; /* Adjust this number based on your content */
+}
+
+.package-btn {
+    margin-top: auto !important; /* Forces button to the bottom of the flex container */
+}
+
+/* Fixes the Header Readability */
+.package-header {
+    background: var(--primary-dark) !important; /* Solid dark violet */
+    color: white !important;
+    padding: 1.5rem 0.5rem !important;
+}
+
+    .package-header h3 {
+        color: white !important;
+        margin-bottom: 0;
+        font-weight: 800;
     }

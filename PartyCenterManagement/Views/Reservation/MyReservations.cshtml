@@ -1,120 +1,199 @@
 ﻿@model IEnumerable<PartyCenterManagement.Models.Reservation>
 
-@{
-    ViewData["Title"] = "My Reservations";
-}
-
 <div class="container py-5">
-    <h1 class="mb-4 text-center">My Reservations</h1>
+    <div class="text-center mb-5">
+        <span class="badge rounded-pill bg-soft-primary text-primary px-3 py-2 mb-2 shadow-sm">Customer Portal</span>
+        <h1 class="display-4 fw-black text-dark">My Reservations</h1>
+        <p class="text-muted">Manage your upcoming celebrations in one place.</p>
+    </div>
 
-    @if (!Model.Any())
-    {
-        <div class="alert alert-info text-center">
-            You have no reservations yet. <a asp-controller="Reservation" asp-action="Reserve">Make one now!</a>
-        </div>
-    }
-    else
-    {
-        <div class="row g-4">
-            @foreach (var r in Model)
-            {
-                var withinFiveDays = (r.Date - DateTime.Now).TotalDays <= 5;
+    <div class="row g-4">
+        @foreach (var r in Model)
+        {
+            var withinFiveDays = (r.Date - DateTime.Now).TotalDays <= 5;
 
-                <div class="col-md-4">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-header bg-primary text-white text-center fs-4 fw-bold">
-                            @r.Package.Name
+            <div class="col-lg-4 col-md-6">
+                <div class="reservation-card h-100 border-0 shadow-sm overflow-hidden">
+                    <div class="card-header-gradient p-4 text-white d-flex justify-content-between align-items-center">
+                        <div>
+                            <small class="opacity-75 d-block text-uppercase fw-bold" style="font-size: 0.65rem; letter-spacing: 1px;">Package</small>
+                            <h5 class="mb-0 fw-bold">@r.Package.Name</h5>
                         </div>
-                        <div class="card-body d-flex flex-column justify-content-between">
-                            <div>
-                                <p class="mb-1"><strong>Date:</strong> @($"{r.Date:yyyy-MM-dd} {r.Date:HH\\:mm}")</p>
-                                <p class="mb-1"><strong>Length:</strong> @r.Length hrs</p>
-                                <p class="mb-1"><strong>Guests:</strong> @r.GuestCount</p>
-                                <p class="mb-1">
-                                    <strong>Services:</strong>
-                                    @if (r.ReservationServices.Any())
-                                    {
-                                        @string.Join(", ", r.ReservationServices.Select(s => s.Service.Serv))
-                                    }
-                                    else
-                                    {
-                                        <span>N/A</span>
-                                    }
-                                </p>
-                                <p class="mb-1"><strong>Price:</strong> @r.Price.ToString("C")</p>
-                                <p class="mb-1">
-                                    <strong>Status:</strong>
-                                    @if (r.Status == "Pending")
-                                    {
-                                        <span class="badge bg-warning text-dark">@r.Status</span>
-                                    }
-                                    else if (r.Status == "Confirmed")
-                                    {
-                                        <span class="badge bg-success">@r.Status</span>
-                                    }
-                                    else if (r.Status == "Cancelled")
-                                    {
-                                        <span class="badge bg-danger">@r.Status</span>
-                                    }
-                                </p>
-                                <p class="mb-0"><strong>Paid:</strong> @r.Paid</p>
+                        <span class="badge rounded-pill px-3 py-2" style="background: rgba(255,255,255,0.2); backdrop-filter: blur(4px);">
+                            @r.Status
+                        </span>
+                    </div>
+
+                    <div class="card-body p-4 bg-white">
+                        <div class="d-flex align-items-start mb-4">
+                            <div class="icon-box-sm bg-soft-primary text-primary rounded-3 me-3">
+                                <i class="bi bi-calendar-event"></i>
                             </div>
+                            <div>
+                                <small class="text-muted d-block">Scheduled For</small>
+                                <span class="fw-bold text-dark fs-5">@r.Date.ToString("MMM dd, yyyy")</span>
+                                <span class="text-muted ms-1">@@ @r.Date.ToString("HH:mm")</span>
+                            </div>
+                        </div>
 
-                            <div class="mt-3 text-center d-flex justify-content-center gap-2">
+                        <div class="row g-2 mb-4">
+                            <div class="col-6">
+                                <div class="p-3 rounded-4 bg-light text-center border border-transparent transition">
+                                    <small class="text-muted d-block mb-1">Duration</small>
+                                    <span class="fw-bold text-dark">@r.Length hrs</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="p-3 rounded-4 bg-light text-center border border-transparent transition">
+                                    <small class="text-muted d-block mb-1">Guests</small>
+                                    <span class="fw-bold text-dark">@r.GuestCount</span>
+                                </div>
+                            </div>
+                        </div>
 
-                                @if (r.Status != "Cancelled")
+                        <div class="d-flex justify-content-between align-items-center py-3 border-top border-bottom border-light mb-4">
+                            <div>
+                                <small class="text-muted d-block">Total Investment</small>
+                                <span class="h4 fw-black text-primary mb-0">@r.Price.ToString("C0")</span>
+                            </div>
+                            <div class="text-end">
+                                <span class="badge @(r.Paid ? "bg-soft-success text-success" : "bg-soft-danger text-danger") px-3 py-2 rounded-pill">
+                                    <i class="bi @(r.Paid ? "bi-check-circle" : "bi-exclamation-circle") me-1"></i>
+                                    @(r.Paid ? "Paid" : "Unpaid")
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            @if (r.Status != "Cancelled")
+                            {
+                                @if (withinFiveDays)
                                 {
+                                    <span class="w-50" data-bs-toggle="tooltip" title="Locked within 5 days">
+                                        <button class="btn btn-modern-disabled w-100" disabled>Edit</button>
+                                    </span>
+                                }
+                                else
+                                {
+                                    <a asp-controller="Reservation" asp-action="Reserve" asp-route-id="@r.ReservationID"
+                                       class="btn btn-modern-primary flex-grow-1">
+                                        Edit
+                                    </a>
+                                }
+
+                                <form asp-action="CancelReservation" asp-controller="Reservation" method="post" class="flex-grow-1">
+                                    <input type="hidden" name="id" value="@r.ReservationID" />
                                     @if (withinFiveDays)
                                     {
-                                        <span data-bs-toggle="tooltip" title="Reservations cannot be edited within 5 days">
-                                            <a class="btn btn-sm btn-secondary disabled">
-                                                Edit
-                                            </a>
+                                        <span class="w-100" data-bs-toggle="tooltip" title="Locked within 5 days">
+                                            <button type="submit" class="btn btn-modern-disabled w-100" disabled>Cancel</button>
                                         </span>
                                     }
                                     else
                                     {
-                                        <a asp-controller="Reservation"
-                                           asp-action="Reserve"
-                                           asp-route-id="@r.ReservationID"
-                                           class="btn btn-sm btn-secondary">
-                                            Edit
-                                        </a>
+                                        <button type="submit" class="btn btn-modern-outline-accent w-100" onclick="return confirm('Cancel this party?')">
+                                            Cancel
+                                        </button>
                                     }
-                                }
-
-                                @if (r.Status != "Cancelled")
-                                {
-                                    <form asp-action="CancelReservation" asp-controller="Reservation" method="post">
-                                        <input type="hidden" name="id" value="@r.ReservationID" />
-
-                                        @if (withinFiveDays)
-                                        {
-                                            <span data-bs-toggle="tooltip" title="Reservations cannot be cancelled within 5 days">
-                                                <button type="submit" class="btn btn-sm btn-danger" disabled>Cancel</button>
-                                            </span>
-                                        }
-                                        else
-                                        {
-                                            <button type="submit" class="btn btn-sm btn-danger">Cancel</button>
-                                        }
-                                    </form>
-                                }
-
-                            </div>
+                                </form>
+                            }
                         </div>
                     </div>
                 </div>
-            }
-        </div>
-    }
+            </div>
+        }
+    </div>
 </div>
 
-@section Scripts {
-    <script>
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-        tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl)
-        })
-    </script>
-}
+<style>
+    /* 1. SMOOTH HOVER ANIMATION */
+    .reservation-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        border-radius: 24px;
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); /* Ultra smooth ease */
+    }
+
+        .reservation-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12) !important;
+        }
+
+    /* 2. CARD STYLES */
+    .card-header-gradient {
+        background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+    }
+
+    .icon-box-sm {
+        width: 42px;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .bg-soft-primary {
+        background: rgba(108, 92, 231, 0.1);
+    }
+
+    .bg-soft-success {
+        background: rgba(0, 184, 148, 0.1);
+    }
+
+    .bg-soft-danger {
+        background: rgba(255, 118, 117, 0.1);
+    }
+
+    /* 3. MODERN BUTTON STYLES */
+    .btn-modern-primary {
+        background: #6c5ce7;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 10px 20px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+    }
+
+        .btn-modern-primary:hover {
+            background: white;
+            color: #6c5ce7;
+            border: 2px solid #6c5ce7;
+            border-radius: 12px;
+            transform: scale(1.02);
+        }
+
+    .btn-modern-outline-accent {
+        background: #fd79a8;
+        color: white;
+        border: 2px solid #fd79a8;
+        border-radius: 12px;
+        padding: 8px 20px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+        .btn-modern-outline-accent:hover {
+            background: white;
+            color: #fd79a8;
+            border: 2px solid #fd79a8;
+            border-radius: 12px;
+            transform: scale(1.02);
+        }
+
+    .btn-modern-disabled {
+        background: #f1f2f6;
+        color: #ced4da;
+        border: 2px solid #6c5ce7;
+        border-radius: 12px;
+        padding: 10px 20px;
+        cursor: not-allowed;
+    }
+
+    .fw-black {
+        font-weight: 900;
+    }
+</style>
