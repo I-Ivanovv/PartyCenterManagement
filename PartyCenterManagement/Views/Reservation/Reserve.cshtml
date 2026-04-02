@@ -2,42 +2,43 @@
 
 <div class="container py-5">
     <div class="text-center mb-5">
-        <span class="badge rounded-pill bg-soft-primary text-primary px-3 py-2 mb-3">Booking Portal</span>
+        <span class="badge rounded-pill bg-soft-primary text-primary px-3 py-2 mb-3 shadow-sm">Booking Portal</span>
         <h1 class="display-4 fw-black text-dark">Reserve Your Package</h1>
         <p class="text-muted fs-5">Fill in the details below to lock in your celebration date.</p>
     </div>
 
-    <div class="glass-card shadow-lg mx-auto border-0" style="max-width: 850px; overflow: hidden;">
+    <div class="glass-card shadow-lg mx-auto border-0" style="max-width: 850px; overflow: hidden; border-radius: 24px;">
         <div class="text-white text-center py-4"
-             style="background: linear-gradient(135deg, var(--primary), var(--primary-dark));">
-            <h4 class="mb-0 fw-bold">Reservation Details</h4>
+             style="background: linear-gradient(135deg, #6c5ce7, #a29bfe);">
+            <h4 class="mb-0 fw-bold"><i class="bi bi-calendar-check me-2"></i>Reservation Details</h4>
         </div>
 
         <div class="card-body p-4 p-md-5">
             <form asp-action="Reserve" method="post" id="reserveForm">
+                @Html.AntiForgeryToken()
                 <input type="hidden" asp-for="ReservationID" />
 
                 @if (Model.IsGuest)
                 {
                     <div class="mb-5">
-                        <div class="d-flex align-items-center mb-3">
+                        <div class="d-flex align-items-center mb-4">
                             <i class="bi bi-person-badge text-primary fs-4 me-2"></i>
-                            <h5 class="fw-bold mb-0" style="color: var(--primary);">Guest Information</h5>
+                            <h5 class="fw-bold mb-0 text-dark">Guest Information</h5>
                         </div>
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label small fw-bold text-muted">First Name</label>
-                                <input asp-for="FirstName" class="form-control custom-input" placeholder="John" required />
+                                <label class="form-label small fw-bold text-muted text-uppercase">First Name</label>
+                                <input asp-for="FirstName" class="form-control modern-input" placeholder="John" required />
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label small fw-bold text-muted">Last Name</label>
-                                <input asp-for="LastName" class="form-control custom-input" placeholder="Doe" required />
+                                <label class="form-label small fw-bold text-muted text-uppercase">Last Name</label>
+                                <input asp-for="LastName" class="form-control modern-input" placeholder="Doe" required />
                             </div>
                             <div class="col-12">
-                                <label class="form-label small fw-bold text-muted">Phone Number</label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-telephone"></i></span>
-                                    <input asp-for="PhoneNumber" class="form-control custom-input border-start-0" placeholder="+1 234 567 890" required />
+                                <label class="form-label small fw-bold text-muted text-uppercase">Phone Number</label>
+                                <div class="input-group modern-input-group">
+                                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-telephone text-primary"></i></span>
+                                    <input asp-for="PhoneNumber" class="form-control border-start-0 ps-0 shadow-none" placeholder="+359..." required />
                                 </div>
                             </div>
                         </div>
@@ -47,9 +48,9 @@
                 <div class="mb-5">
                     <div class="d-flex align-items-center mb-3">
                         <i class="bi bi-box-seam text-primary fs-4 me-2"></i>
-                        <h5 class="fw-bold mb-0" style="color: var(--primary);">Select Package</h5>
+                        <h5 class="fw-bold mb-0 text-dark">Select Package</h5>
                     </div>
-                    <select asp-for="PackageID" id="packageSelect" class="form-select custom-input py-3 shadow-sm" required>
+                    <select asp-for="PackageID" id="packageSelect" class="form-select modern-input py-3 shadow-sm" required>
                         <option value="">-- Choose a package --</option>
                         @foreach (var p in Model.Packages)
                         {
@@ -58,7 +59,7 @@
                                     data-service-ids="@string.Join(",", p.PackageServices.Select(ps => ps.ServiceID))"
                                     data-max-guests="@p.MaxGuests"
                                     data-max-length="@p.MaxLength">
-                                @p.Name (€@p.Price.ToString("0.00"))
+                                @p.Name (€@p.Price.ToString("N2"))
                             </option>
                         }
                     </select>
@@ -66,28 +67,40 @@
 
                 <div class="row g-4 mb-5">
                     <div class="col-md-6">
-                        <label class="form-label small fw-bold text-muted">Event Date</label>
-                        <input asp-for="Date" type="date" class="form-control custom-input" min="@DateTime.Today.ToString("yyyy-MM-dd")" required />
+                        <label class="form-label small fw-bold text-muted text-uppercase">Event Date</label>
+                        <div class="input-group modern-input-group">
+                            <span class="input-group-text bg-white border-end-0"><i class="bi bi-calendar3 text-primary"></i></span>
+                            <input asp-for="Date" type="date" class="form-control border-start-0 ps-0 shadow-none" min="@DateTime.Today.ToString("yyyy-MM-dd")" required />
+                        </div>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label small fw-bold text-muted">Start Time</label>
-                        <select asp-for="Time" class="form-select custom-input" required>
-                            <option value="">-- Select Time --</option>
-                            @for (int h = 8; h <= 22; h++)
-                            {
-                                var time = new TimeSpan(h, 0, 0);
-                                <option value="@time">@time.ToString(@"hh\:mm")</option>
-                            }
-                        </select>
+                        <label class="form-label small fw-bold text-muted text-uppercase">Start Time</label>
+                        <div class="input-group modern-input-group">
+                            <span class="input-group-text bg-white border-end-0"><i class="bi bi-clock text-primary"></i></span>
+                            <select asp-for="Time" class="form-select border-start-0 ps-0 shadow-none" required>
+                                <option value="">-- Select Time --</option>
+                                @for (int h = 8; h <= 22; h++)
+                                {
+                                    var time = new TimeSpan(h, 0, 0);
+                                    <option value="@time">@time.ToString(@"hh\:mm")</option>
+                                }
+                            </select>
+                        </div>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label small fw-bold text-muted">Length (Hours)</label>
-                        <input asp-for="Length" id="lengthInput" type="number" min="1" class="form-control custom-input" required />
+                        <label class="form-label small fw-bold text-muted text-uppercase">Length (Hours)</label>
+                        <div class="input-group modern-input-group">
+                            <span class="input-group-text bg-white border-end-0"><i class="bi bi-hourglass-split text-primary"></i></span>
+                            <input asp-for="Length" id="lengthInput" type="number" step="0.1" class="form-control border-start-0 ps-0 shadow-none" required />
+                        </div>
                         <div class="text-danger x-small mt-1" id="lengthError"></div>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label small fw-bold text-muted">Guest Count</label>
-                        <input asp-for="GuestCount" id="guestInput" type="number" min="1" class="form-control custom-input" required />
+                        <label class="form-label small fw-bold text-muted text-uppercase">Guest Count</label>
+                        <div class="input-group modern-input-group">
+                            <span class="input-group-text bg-white border-end-0"><i class="bi bi-people text-primary"></i></span>
+                            <input asp-for="GuestCount" id="guestInput" type="number" class="form-control border-start-0 ps-0 shadow-none" required />
+                        </div>
                         <div class="text-danger x-small mt-1" id="guestError"></div>
                     </div>
                 </div>
@@ -95,18 +108,26 @@
                 <div class="mb-5">
                     <div class="d-flex align-items-center mb-3">
                         <i class="bi bi-stars text-primary fs-4 me-2"></i>
-                        <h5 class="fw-bold mb-0" style="color: var(--primary);">Enhance Your Experience</h5>
+                        <h5 class="fw-bold mb-0 text-dark">Enhance Your Experience</h5>
                     </div>
-                    <div id="servicesContainer" class="bg-light rounded-4 p-4" style="max-height: 250px; overflow-y: auto; border: 1px dashed var(--primary-light);">
-                        <div class="row">
+                    <div id="servicesContainer" class="bg-light rounded-4 p-4 border shadow-inner" style="max-height: 350px; overflow-y: auto;">
+                        <div class="row g-3">
                             @foreach (var s in Model.Services)
                             {
-                                <div class="col-sm-6 mb-3">
-                                    <div class="form-check custom-checkbox">
-                                        <input class="form-check-input service-checkbox" type="checkbox" name="ServiceIds"
-                                               value="@s.ServiceID" data-price="@s.Price" id="service-@s.ServiceID">
-                                        <label class="form-check-label ms-2" for="service-@s.ServiceID">
-                                            @s.Serv <span class="text-muted fw-normal">(+€@s.Price.ToString("0.00"))</span>
+                                <div class="col-sm-6">
+                                    <div class="form-check custom-checkbox p-3 bg-white border rounded-3 h-100 service-card"
+                                         style="cursor: pointer; transition: all 0.2s ease;"
+                                         onclick="toggleServiceCard(this)">
+                                        <input class="form-check-input service-checkbox ms-0 me-2"
+                                               type="checkbox"
+                                               name="ServiceIds"
+                                               value="@s.ServiceID"
+                                               data-price="@s.Price"
+                                               id="service-@s.ServiceID"
+                                               onclick="event.stopPropagation();">
+                                        <label class="form-check-label fw-semibold text-dark" for="service-@s.ServiceID" onclick="event.stopPropagation();">
+                                            @s.Serv <br />
+                                            <small class="text-primary">+€@s.Price.ToString("N2")</small>
                                         </label>
                                     </div>
                                 </div>
@@ -117,38 +138,112 @@
 
                 <div class="bg-soft-primary rounded-4 p-4 mb-5 border border-primary border-opacity-10 shadow-sm">
                     <div class="d-flex justify-content-between mb-2">
-                        <span class="text-muted">Base Package Price</span>
+                        <span class="text-muted fw-medium">Base Package Price</span>
                         <span class="fw-bold text-dark" id="packagePrice">€0.00</span>
                     </div>
                     <div class="d-flex justify-content-between mb-3">
-                        <span class="text-muted">Extra Services Total</span>
+                        <span class="text-muted fw-medium">Extra Services Total</span>
                         <span class="fw-bold text-dark" id="extraServicesTotal">€0.00</span>
                     </div>
                     <div class="border-top border-2 border-white my-3"></div>
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <h4 class="mb-0 fw-black text-primary">Estimated Total</h4>
-                            <small class="text-muted">Taxes and fees included</small>
+                            <small class="text-muted">Final price calculated at checkout</small>
                         </div>
                         <span class="display-6 fw-black text-primary" id="finalPrice">€0.00</span>
                     </div>
                 </div>
 
                 <div class="mb-5">
-                    <label class="form-label small fw-bold text-muted">Note to the Planner</label>
-                    <textarea asp-for="Note" class="form-control custom-input" rows="3" placeholder="Any specific requests or allergies?"></textarea>
+                    <label class="form-label small fw-bold text-muted text-uppercase">Note to the Planner</label>
+                    <textarea asp-for="Note" class="form-control modern-input" rows="3" placeholder="Any specific requests or allergies?"></textarea>
                 </div>
 
-                <div class="text-center d-grid gap-2 col-md-6 mx-auto">
-                    <button type="submit" id="reserveBtn" class="btn btn-primary btn-lg rounded-pill py-3 shadow">
-                        @(Model.ReservationID != null ? "Update Reservation" : "Confirm Reservation")
+                <div class="text-center d-grid gap-3 col-md-8 mx-auto">
+                    <button type="submit" id="reserveBtn" class="btn btn-modern-primary btn-lg py-3 shadow">
+                        @(Model.ReservationID != null ? "Update Reservation" : "Confirm My Celebration")
                     </button>
-                    <a href="javascript:history.back()" class="btn btn-link text-muted">Cancel</a>
+                    <a href="javascript:history.back()" class="btn btn-link text-muted text-decoration-none fw-bold">Cancel and Go Back</a>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<style>
+    .fw-black {
+        font-weight: 900;
+    }
+
+    .bg-soft-primary {
+        background: rgba(108, 92, 231, 0.08);
+    }
+
+    .glass-card {
+        background: white;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .modern-input, .modern-input-group {
+        border-radius: 12px;
+        border: 1.5px solid #dee2e6;
+        transition: all 0.3s ease;
+    }
+
+        .modern-input:focus, .modern-input-group:focus-within {
+            border-color: #6c5ce7;
+            box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.1);
+            outline: none;
+        }
+
+    .modern-input-group {
+        padding: 0;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+    }
+
+        .modern-input-group .form-control, .modern-input-group .form-select {
+            border: none;
+            padding: 12px;
+        }
+
+    .service-card:hover:not([style*="opacity: 0.6"]) {
+        border-color: #6c5ce7 !important;
+        background-color: rgba(108, 92, 231, 0.02) !important;
+        transform: translateY(-2px);
+    }
+
+    .btn-modern-primary {
+        background: #6c5ce7;
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-weight: 700;
+        transition: all 0.3s ease;
+    }
+
+        .btn-modern-primary:hover:not(:disabled) {
+            background: #5b4bc4;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(108, 92, 231, 0.2);
+        }
+
+        .btn-modern-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+    .shadow-inner {
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .x-small {
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+</style>
 
 @section Scripts {
     <script>
@@ -163,9 +258,16 @@
         const extraTotalDiv = document.getElementById("extraServicesTotal");
         const reserveBtn = document.getElementById("reserveBtn");
 
+        function toggleServiceCard(cardElement) {
+            const checkbox = cardElement.querySelector('.service-checkbox');
+            if (!checkbox.disabled) {
+                checkbox.checked = !checkbox.checked;
+                updatePrice();
+            }
+        }
+
         function updatePackageDetails() {
             const option = packageSelect.selectedOptions[0];
-
             if (!option.value) {
                 packagePriceDiv.textContent = "€0.00";
                 finalPriceDiv.textContent = "€0.00";
@@ -180,19 +282,22 @@
             const includedServices = (option.dataset.serviceIds || "").split(',').filter(x => x).map(Number);
 
             serviceCheckboxes.forEach(cb => {
+                const card = cb.closest('.service-card');
                 if (includedServices.includes(Number(cb.value))) {
                     cb.checked = true;
                     cb.disabled = true;
+                    card.style.opacity = "0.6";
+                    card.style.backgroundColor = "#f8f9fa";
+                    card.style.cursor = "default";
                 } else {
-                    cb.checked = false;
                     cb.disabled = false;
+                    card.style.opacity = "1";
+                    card.style.backgroundColor = "#fff";
+                    card.style.cursor = "pointer";
                 }
             });
 
-            guestInput.max = maxGuests;
-            lengthInput.max = maxLength;
             packagePriceDiv.textContent = "€" + price.toFixed(2);
-
             updatePrice();
             validateInputs();
         }
@@ -205,22 +310,34 @@
             const maxLength = parseInt(option.dataset.maxLength);
             let valid = true;
 
-            if (parseInt(guestInput.value) > maxGuests) {
-                guestError.textContent = "✖ Maximum allowed for this package: " + maxGuests;
-                guestInput.classList.add("is-invalid");
+            // 1. Duration Validation (Minimum 0.5)
+            const duration = parseFloat(lengthInput.value);
+            if (lengthInput.value !== "" && duration < 0.5) {
+                lengthError.textContent = "✖ Duration must be at least 0.5 hours";
+                lengthInput.closest('.modern-input-group').style.borderColor = "#dc3545";
                 valid = false;
-            } else {
-                guestError.textContent = "";
-                guestInput.classList.remove("is-invalid");
-            }
-
-            if (parseInt(lengthInput.value) > maxLength) {
-                lengthError.textContent = "✖ Maximum duration for this package: " + maxLength + "h";
-                lengthInput.classList.add("is-invalid");
+            } else if (duration > maxLength) {
+                lengthError.textContent = "✖ Maximum duration: " + maxLength + "h";
+                lengthInput.closest('.modern-input-group').style.borderColor = "#dc3545";
                 valid = false;
             } else {
                 lengthError.textContent = "";
-                lengthInput.classList.remove("is-invalid");
+                lengthInput.closest('.modern-input-group').style.borderColor = "";
+            }
+
+            // 2. Guest Validation (Minimum 1)
+            const guests = parseInt(guestInput.value);
+            if (guestInput.value !== "" && guests < 1) {
+                guestError.textContent = "✖ At least 1 guest required";
+                guestInput.closest('.modern-input-group').style.borderColor = "#dc3545";
+                valid = false;
+            } else if (guests > maxGuests) {
+                guestError.textContent = "✖ Maximum allowed: " + maxGuests;
+                guestInput.closest('.modern-input-group').style.borderColor = "#dc3545";
+                valid = false;
+            } else {
+                guestError.textContent = "";
+                guestInput.closest('.modern-input-group').style.borderColor = "";
             }
 
             reserveBtn.disabled = !valid || !guestInput.value || !lengthInput.value;
@@ -229,16 +346,11 @@
         function updatePrice() {
             const option = packageSelect.selectedOptions[0];
             if (!option.value) return;
-
             const basePrice = parseFloat(option.dataset.price);
             let extraPrice = 0;
-
             serviceCheckboxes.forEach(cb => {
-                if (cb.checked && !cb.disabled) {
-                    extraPrice += parseFloat(cb.dataset.price);
-                }
+                if (cb.checked && !cb.disabled) extraPrice += parseFloat(cb.dataset.price);
             });
-
             extraTotalDiv.textContent = "€" + extraPrice.toFixed(2);
             finalPriceDiv.textContent = "€" + (basePrice + extraPrice).toFixed(2);
         }
@@ -248,7 +360,6 @@
         lengthInput.addEventListener("input", validateInputs);
         serviceCheckboxes.forEach(cb => cb.addEventListener("change", updatePrice));
 
-        // Initial setup for edit mode or deep link
         if (packageSelect.value && packageSelect.value != "0") {
              updatePackageDetails();
         } else {

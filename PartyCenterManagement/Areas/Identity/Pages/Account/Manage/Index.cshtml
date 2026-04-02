@@ -5,29 +5,48 @@
     ViewData["ActivePage"] = ManageNavPages.Index;
 }
 
-<h3>@ViewData["Title"]</h3>
-<partial name="_StatusMessage" for="StatusMessage" />
-<div class="row">
-    <div class="col-md-6">
-        <form id="profile-form" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.FirstName" class="form-control" placeholder="Please enter your First Name."/>
-                <label asp-for="Input.FirstName" class="form-label"></label>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.LastName" class="form-control" placeholder="Please enter your Last Name." />
-                <label asp-for="Input.LastName" class="form-label"></label>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Please enter your phone number."/>
-                <label asp-for="Input.PhoneNumber" class="form-label"></label>
-                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
-            </div>
-            <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
-        </form>
+<div class="d-flex align-items-center mb-4">
+    <div class="bg-soft-primary p-3 rounded-4 me-3">
+        <i class="bi bi-person-bounding-box fs-3 text-primary"></i>
+    </div>
+    <div>
+        <h3 class="fw-bold mb-0">Public Profile</h3>
+        <p class="text-muted mb-0">Manage how your name appears to others</p>
     </div>
 </div>
+
+<partial name="_StatusMessage" for="StatusMessage" />
+
+<form id="profile-form" method="post" style="max-width: 500px;">
+    <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label asp-for="Input.FirstName" class="form-label small fw-bold text-muted text-uppercase">First Name</label>
+            <div class="input-group modern-input-group">
+                <input asp-for="Input.FirstName" class="form-control" placeholder="John" />
+            </div>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="Input.LastName" class="form-label small fw-bold text-muted text-uppercase">Last Name</label>
+            <div class="input-group modern-input-group">
+                <input asp-for="Input.LastName" class="form-control" placeholder="Doe" />
+            </div>
+        </div>
+        <div class="col-12">
+            <label asp-for="Input.PhoneNumber" class="form-label small fw-bold text-muted text-uppercase">Phone Number</label>
+            <div class="input-group modern-input-group">
+                <span class="input-group-text bg-white border-0"><i class="bi bi-telephone text-primary"></i></span>
+                <input asp-for="Input.PhoneNumber" class="form-control border-0" placeholder="Enter phone..." />
+            </div>
+            <span asp-validation-for="Input.PhoneNumber" class="text-danger x-small"></span>
+        </div>
+    </div>
+
+    <button id="update-profile-button" type="submit" class="btn btn-modern-primary btn-lg mt-4 w-100 shadow ">
+        Save Profile Changes
+    </button>
+</form>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

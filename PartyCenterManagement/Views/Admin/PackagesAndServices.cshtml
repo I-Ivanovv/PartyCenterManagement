@@ -7,62 +7,87 @@
 
 <div class="container py-5">
     <div class="text-center mb-5">
-        <h1 class="display-5 fw-bold text-primary">Admin Dashboard</h1>
-        <p class="text-muted">Configure your offerings and additional party services</p>
+        <span class="badge rounded-pill bg-soft-primary text-primary px-3 py-2 mb-2 shadow-sm">Management Console</span>
+        <h1 class="display-5 fw-black text-dark">Packages & Services</h1>
+        <p class="text-muted">Configure your party packages and premium add-ons</p>
     </div>
 
-    <ul class="nav nav-pills justify-content-center mb-5 gap-2" id="adminTab" role="tablist">
+    <ul class="nav nav-pills justify-content-center mb-5 gap-3" id="adminTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active px-4 py-2 shadow-sm" id="packages-tab" data-bs-toggle="tab" data-bs-target="#packages-pane" type="button" role="tab">
+            <button class="nav-link active btn-modern-tab px-4 py-2" id="packages-tab" data-bs-toggle="tab" data-bs-target="#packages-pane" type="button" role="tab">
                 <i class="bi bi-box-seam me-2"></i>Packages
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link px-4 py-2 shadow-sm" id="services-tab" data-bs-toggle="tab" data-bs-target="#services-pane" type="button" role="tab">
+            <button class="nav-link btn-modern-tab px-4 py-2" id="services-tab" data-bs-toggle="tab" data-bs-target="#services-pane" type="button" role="tab">
                 <i class="bi bi-gear me-2"></i>Services
             </button>
         </li>
     </ul>
 
     <div class="tab-content" id="adminTabContent">
-        <div class="tab-pane fade show active" id="packages-pane" role="tabpanel" tabindex="0">
+        <div class="tab-pane fade show active" id="packages-pane" role="tabpanel">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h3 class="fw-bold mb-0">Available Packages</h3>
-                <a asp-action="UpsertPackage" class="btn btn-primary shadow-sm">
+                <h3 class="fw-bold mb-0 text-dark">Available Packages</h3>
+                <a asp-action="UpsertPackage" class="btn btn-modern-primary shadow-sm">
                     <i class="bi bi-plus-lg me-1"></i> Add New Package
                 </a>
             </div>
 
-            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+            <div class="glass-card border-0 shadow-sm rounded-4 overflow-hidden">
                 <div class="table-responsive">
                     <table class="table align-middle mb-0 table-hover">
-                        <thead class="thead-modern">
+                        <thead class="bg-light">
                             <tr>
-                                <th class="ps-4">Name</th>
-                                <th>Price</th>
-                                <th><i class="bi bi-people me-1"></i> Guests</th>
-                                <th><i class="bi bi-clock me-1"></i> Duration</th>
-                                <th class="text-end pe-4">Actions</th>
+                                <th class="ps-4 border-0">Package Detail</th>
+                                <th class="border-0">Base Price</th>
+                                <th class="border-0 text-center">Capacity</th>
+                                <th class="border-0">Included Services</th>
+                                <th class="text-end pe-4 border-0">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var p in ViewBag.Packages as List<Package>)
                             {
                                 <tr>
-                                    <td class="ps-4 fw-bold text-dark">@p.Name</td>
-                                    <td><span class="badge bg-soft-primary text-primary fs-6">@p.Price.ToString("C")</span></td>
-                                    <td>@p.MaxGuests Guests</td>
-                                    <td>@p.MaxLength hrs</td>
+                                    <td class="ps-4 py-3">
+                                        <span class="fw-bold text-dark d-block">@p.Name</span>
+                                        <small class="text-muted">@p.MaxLength hrs duration</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-soft-primary text-primary fs-6 fw-bold">
+                                            €@p.Price.ToString("N2")
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="d-inline-flex align-items-center px-2 py-1 rounded-pill bg-light border">
+                                            <i class="bi bi-people-fill text-muted me-2"></i>
+                                            <span class="fw-bold">@p.MaxGuests</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            @if (p.PackageServices != null && p.PackageServices.Any())
+                                            {
+                                                foreach (var ps in p.PackageServices)
+                                                {
+                                                    <span class="badge bg-light text-dark border fw-normal" style="font-size: 0.7rem;">@ps.Service.Serv</span>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <small class="text-muted italic">Base venue only</small>
+                                            }
+                                        </div>
+                                    </td>
                                     <td class="text-end pe-4">
-                                        <div class="btn-group">
-                                            <a class="btn btn-outline-primary btn-sm rounded-pill me-2 px-3"
-                                               asp-controller="Admin" asp-action="UpsertPackage" asp-route-id="@p.PackageID">
-                                                <i class="bi bi-pencil-square"></i> Edit
+                                        <div class="d-flex justify-content-end gap-2">
+                                            <a class="btn btn-icon-edit" asp-action="UpsertPackage" asp-route-id="@p.PackageID">
+                                                <i class="bi bi-pencil"></i>
                                             </a>
-                                            <form asp-controller="Admin" asp-action="DeletePackage" method="post" class="d-inline">
+                                            <form asp-action="DeletePackage" method="post" class="d-inline">
                                                 <input type="hidden" name="id" value="@p.PackageID" />
-                                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3"
-                                                        onclick="return confirm('Are you sure?')">
+                                                <button type="submit" class="btn btn-icon-delete" onclick="return confirm('Delete this package?')">
                                                     <i class="bi bi-trash"></i>
                                                 </button>
                                             </form>
@@ -76,48 +101,49 @@
             </div>
         </div>
 
-        <div class="tab-pane fade" id="services-pane" role="tabpanel" tabindex="0">
+        <div class="tab-pane fade" id="services-pane" role="tabpanel">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h3 class="fw-bold mb-0">Add-on Services</h3>
-                <a asp-action="UpsertService" class="btn btn-primary shadow-sm">
+                <h3 class="fw-bold mb-0 text-dark">Add-on Services</h3>
+                <a asp-action="UpsertService" class="btn btn-modern-primary shadow-sm">
                     <i class="bi bi-plus-lg me-1"></i> Add New Service
                 </a>
             </div>
 
-            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+            <div class="glass-card border-0 shadow-sm rounded-4 overflow-hidden">
                 <div class="table-responsive">
                     <table class="table align-middle mb-0 table-hover">
-                        <thead class="thead-modern">
+                        <thead class="bg-light">
                             <tr>
-                                <th class="ps-4">Service Name</th>
-                                <th>Price</th>
-                                <th class="text-end pe-4">Actions</th>
+                                <th class="ps-4 border-0">Service Description</th>
+                                <th class="border-0 text-center">Unit Price</th>
+                                <th class="text-end pe-4 border-0">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var s in ViewBag.Services as List<Service>)
                             {
                                 <tr>
-                                    <td class="ps-4 fw-bold text-dark">@s.Serv</td>
-                                    <td>
+                                    <td class="ps-4 py-3 fw-bold text-dark">@s.Serv</td>
+                                    <td class="text-center">
                                         @if (s.Price > 0)
                                         {
-                                            <span class="badge bg-soft-teal text-teal fs-6">@s.Price.ToString("C")</span>
+                                            <span class="badge bg-soft-primary text-primary fs-6 fw-bold">
+                                                €@s.Price.ToString("N2")
+                                            </span>
                                         }
                                         else
                                         {
-                                            <span class="badge bg-light text-muted fs-6">Complimentary</span>
+                                            <span class="badge bg-light text-muted border fw-normal fs-6">Free</span>
                                         }
                                     </td>
                                     <td class="text-end pe-4">
-                                        <div class="btn-group">
-                                            <a class="btn btn-outline-primary btn-sm rounded-pill me-2 px-3"
-                                               asp-controller="Admin" asp-action="UpsertService" asp-route-id="@s.ServiceID">
-                                                <i class="bi bi-pencil-square"></i> Edit
+                                        <div class="d-flex justify-content-end gap-2">
+                                            <a class="btn btn-icon-edit" asp-action="UpsertService" asp-route-id="@s.ServiceID">
+                                                <i class="bi bi-pencil"></i>
                                             </a>
-                                            <form asp-controller="Admin" asp-action="DeleteService" method="post" class="d-inline">
+                                            <form asp-action="DeleteService" method="post" class="d-inline">
                                                 <input type="hidden" name="id" value="@s.ServiceID" />
-                                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3">
+                                                <button type="submit" class="btn btn-icon-delete">
                                                     <i class="bi bi-trash"></i>
                                                 </button>
                                             </form>
@@ -133,3 +159,58 @@
     </div>
 </div>
 
+<style>
+    /* Unifying Colors and Pricing */
+    .bg-soft-primary { background: rgba(108, 92, 231, 0.1); }
+    .text-primary { color: #6c5ce7 !important; }
+    .fw-black { font-weight: 900; }
+    
+    .glass-card {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    /* Modern Tabs */
+    .btn-modern-tab {
+        border-radius: 12px;
+        color: #6c757d;
+        background: white;
+        border: 1px solid #dee2e6;
+        transition: all 0.3s ease;
+    }
+    .nav-pills .nav-link.active {
+        background-color: #6c5ce7 !important;
+        box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+    }
+
+    /* Action Buttons */
+    .btn-icon-edit, .btn-icon-delete {
+        width: 36px;
+        height: 36px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        transition: all 0.2s ease;
+        border: none;
+    }
+    .btn-icon-edit { background: rgba(108, 92, 231, 0.1); color: #6c5ce7; }
+    .btn-icon-edit:hover { background: #6c5ce7; color: white; }
+    
+    .btn-icon-delete { background: rgba(253, 121, 168, 0.1); color: #fd79a8; }
+    .btn-icon-delete:hover { background: #fd79a8; color: white; }
+
+    .btn-modern-primary {
+        background: #6c5ce7;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 10px 20px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    .btn-modern-primary:hover { background: #5b4bc4; color: white; transform: translateY(-2px); }
+
+    .table-hover tbody tr:hover { background-color: rgba(108, 92, 231, 0.02); }
+</style>

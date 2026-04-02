@@ -1,5 +1,5 @@
 ﻿@{
-    if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout !=  null)
+    if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout != null)
     {
         Layout = parentLayout.ToString();
     }
@@ -8,18 +8,24 @@
         Layout = "/Areas/Identity/Pages/_Layout.cshtml";
     }
 }
-<div class="container">
-<h1>Manage your account</h1>
 
-<div>
-    <h2>Change your account settings</h2>
-    <hr />
-    <div class="row">
-        <div class="col-md-3">
-            <partial name="_ManageNav" />
-        </div>
-        <div class="col-md-9">
-            @RenderBody()
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <span class="badge rounded-pill bg-soft-primary text-primary px-3 py-2 mb-3 shadow-sm">Account Settings</span>
+        <h1 class="display-4 fw-black text-dark">Manage Your Account</h1>
+        <p class="text-muted fs-5">Update your profile, security settings, and personal data.</p>
+    </div>
+
+    <div class="glass-card shadow-lg mx-auto border-0" style="max-width: 1100px; border-radius: 24px; overflow: hidden;">
+        <div class="row g-0">
+            <div class="col-md-3 border-end bg-light bg-opacity-50 p-4">
+                <h6 class="text-uppercase small fw-black text-muted mb-4 px-2">Settings Menu</h6>
+                <partial name="_ManageNav" />
+            </div>
+
+            <div class="col-md-9 p-4 p-md-5 bg-white">
+                @RenderBody()
+            </div>
         </div>
     </div>
 </div>
@@ -27,4 +33,18 @@
 @section Scripts {
     @RenderSection("Scripts", required: false)
 }
-</div>
+
+<style>
+    .fw-black {
+        font-weight: 900;
+    }
+
+    .bg-soft-primary {
+        background: rgba(108, 92, 231, 0.08);
+    }
+
+    .glass-card {
+        background: white;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+</style>

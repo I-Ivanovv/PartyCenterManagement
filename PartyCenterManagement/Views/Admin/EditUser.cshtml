@@ -1,76 +1,142 @@
 ﻿@model PartyCenterManagement.Models.ViewModels.UserViewModel
 
-<div class="container py-5">
+@{
+    ViewData["Title"] = "Edit User";
+}
 
-    <!-- Title -->
+<div class="container py-5">
     <div class="text-center mb-5">
-        <h2 class="fw-bold" style="color: var(--primary-dark); letter-spacing: 0.5px;">
-            Edit User
-        </h2>
-        <p class="text-muted mb-0">Update user information and permissions</p>
+        <span class="badge rounded-pill bg-soft-primary text-primary px-3 py-2 mb-3 shadow-sm">Administration</span>
+        <h1 class="display-4 fw-black text-dark">Edit User</h1>
+        <p class="text-muted fs-5">Update personal information and assign system permissions.</p>
     </div>
 
-    <div class="card mx-auto edit-user-card" style="max-width: 650px;">
+    <div class="glass-card shadow-lg mx-auto border-0" style="max-width: 700px; overflow: hidden; border-radius: 24px;">
 
-        <!-- Header -->
-        <div class="edit-user-header">
-            <i class="bi bi-person-circle me-2"></i> User Details
+        <div class="text-white text-center py-4"
+             style="background: linear-gradient(135deg, #6c5ce7, #a29bfe);">
+            <h4 class="mb-0 fw-bold"><i class="bi bi-person-gear me-2"></i>User Profile Details</h4>
         </div>
 
-        <div class="card-body p-4">
-
+        <div class="card-body p-4 p-md-5">
             <form asp-action="EditUser" method="post">
                 @Html.AntiForgeryToken()
 
-                <div asp-validation-summary="All" class="text-danger mb-3"></div>
-
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3 small"></div>
                 <input type="hidden" asp-for="UserID" />
 
-                <!-- Names -->
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <label asp-for="FirstName" class="form-label small fw-bold text-muted text-uppercase">First Name</label>
+                        <div class="input-group modern-input-group">
+                            <span class="input-group-text bg-white border-end-0"><i class="bi bi-person text-primary"></i></span>
+                            <input asp-for="FirstName" class="form-control border-start-0 ps-0 shadow-none" placeholder="First Name" required />
+                        </div>
+                        <span asp-validation-for="FirstName" class="text-danger x-small mt-1"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="LastName" class="form-label small fw-bold text-muted text-uppercase">Last Name</label>
+                        <div class="input-group modern-input-group">
+                            <span class="input-group-text bg-white border-end-0"><i class="bi bi-person text-primary"></i></span>
+                            <input asp-for="LastName" class="form-control border-start-0 ps-0 shadow-none" placeholder="Last Name" required />
+                        </div>
+                        <span asp-validation-for="LastName" class="text-danger x-small mt-1"></span>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="PhoneNumber" class="form-label small fw-bold text-muted text-uppercase">Phone Number</label>
+                    <div class="input-group modern-input-group">
+                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-telephone text-primary"></i></span>
+                        <input asp-for="PhoneNumber" class="form-control border-start-0 ps-0 shadow-none" placeholder="+359..." required />
+                    </div>
+                    <span asp-validation-for="PhoneNumber" class="text-danger x-small mt-1"></span>
+                </div>
+
+                <div class="mb-5">
+                    <label asp-for="Role" class="form-label small fw-bold text-muted text-uppercase">System Role</label>
+                    <div class="input-group modern-input-group">
+                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-shield-lock text-primary"></i></span>
+                        <select asp-for="Role"
+                                class="form-select border-start-0 ps-0 shadow-none"
+                                asp-items="@(new SelectList(Model.RoleOptions))"
+                                required>
+                            <option value="">-- Select Authority Level --</option>
+                        </select>
+                    </div>
+                    <span asp-validation-for="Role" class="text-danger x-small mt-1"></span>
+                </div>
+
                 <div class="row g-3">
-                    <div class="col-md-6">
-                        <label asp-for="FirstName" class="form-label custom-label"></label>
-                        <input asp-for="FirstName" class="form-control custom-input" />
-                        <span asp-validation-for="FirstName" class="text-danger small"></span>
+                    <div class="col-sm-6">
+                        <a asp-action="Users" class="btn btn-outline-secondary w-100 py-3 fw-bold rounded-pill">
+                            Cancel
+                        </a>
                     </div>
-
-                    <div class="col-md-6">
-                        <label asp-for="LastName" class="form-label custom-label"></label>
-                        <input asp-for="LastName" class="form-control custom-input" />
-                        <span asp-validation-for="LastName" class="text-danger small"></span>
+                    <div class="col-sm-6">
+                        <button type="submit" class="btn btn-modern-primary w-100 py-3 shadow">
+                            Save Changes
+                        </button>
                     </div>
                 </div>
-
-                <!-- Phone -->
-                <div class="mt-4">
-                    <label asp-for="PhoneNumber" class="form-label custom-label"></label>
-                    <input asp-for="PhoneNumber" class="form-control custom-input" />
-                    <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
-                </div>
-
-                <!-- Role -->
-                <div class="mt-4">
-                    <label asp-for="Role" class="form-label custom-label"></label>
-                    <select asp-for="Role"
-                            class="form-select custom-input"
-                            asp-items="@(new SelectList(Model.RoleOptions))">
-                        <option value="">Select Role</option>
-                    </select>
-                    <span asp-validation-for="Role" class="text-danger small"></span>
-                </div>
-
-                <!-- Buttons -->
-                <div class="d-flex justify-content-between align-items-center mt-5">
-                    <a asp-action="Users" class="btn btn-secondary px-4">
-                        Cancel
-                    </a>
-
-                    <button type="submit" class="btn btn-primary px-4">
-                        Save Changes
-                    </button>
-                </div>
-
             </form>
         </div>
     </div>
 </div>
+
+<style>
+    .fw-black {
+        font-weight: 900;
+    }
+
+    .bg-soft-primary {
+        background: rgba(108, 92, 231, 0.08);
+    }
+
+    .glass-card {
+        background: white;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .modern-input-group {
+        border-radius: 12px;
+        border: 1.5px solid #dee2e6;
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+        .modern-input-group:focus-within {
+            border-color: #6c5ce7;
+            box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.1);
+        }
+
+        .modern-input-group .form-control, .modern-input-group .form-select {
+            border: none;
+            padding: 12px;
+        }
+
+    .btn-modern-primary {
+        background: #6c5ce7;
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-weight: 700;
+        transition: all 0.3s ease;
+    }
+
+        .btn-modern-primary:hover {
+            background: #5b4bc4;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(108, 92, 231, 0.2);
+        }
+
+    .x-small {
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

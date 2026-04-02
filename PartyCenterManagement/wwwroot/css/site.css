@@ -1052,3 +1052,39 @@ header, main, footer {
         margin-bottom: 0;
         font-weight: 800;
     }
+
+.modern-input-group {
+    border-radius: 12px;
+    border: 1.5px solid #dee2e6;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    background: white;
+}
+
+    .modern-input-group:focus-within {
+        border-color: #6c5ce7;
+        box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.1);
+    }
+
+.btn-modern-primary {
+    background: #6c5ce7;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    padding: 12px 24px;
+}
+
+    .btn-modern-primary:hover {
+        color:white;
+        background: #5b4bc4;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(108, 92, 231, 0.2);
+    }
+    
+
+.x-small {
+    font-size: 0.75rem;
+    font-weight: 600;
+}

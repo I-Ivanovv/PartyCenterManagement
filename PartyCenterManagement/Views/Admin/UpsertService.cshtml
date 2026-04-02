@@ -5,62 +5,141 @@
 }
 
 <div class="container py-5">
+    <div class="text-center mb-5">
+        <span class="badge rounded-pill bg-soft-primary text-primary px-3 py-2 mb-3 shadow-sm">Management Portal</span>
+        <h1 class="display-4 fw-black text-dark">@(Model.ServiceID == 0 ? "Create Service" : "Edit Service")</h1>
+        <p class="text-muted fs-5">Configure the details for your additional event services.</p>
+    </div>
 
-    <!-- Title -->
-    <h2 class="text-center mb-5 fw-bold" style="color: var(--primary-dark);">
-        @(Model.ServiceID == 0 ? "Create Service" : "Edit Service")
-    </h2>
-
-    <div class="card shadow-sm mx-auto"
-         style="max-width: 550px; border-radius: 16px; overflow: hidden;">
-
-        <!-- Header -->
-        <div class="p-3 text-white text-center fw-bold"
-             style="background: linear-gradient(135deg, var(--primary), var(--primary-dark)); font-size: 1.2rem; border-radius:8px;">
-            Service Details
+    <div class="glass-card shadow-lg mx-auto border-0" style="max-width: 600px; overflow: hidden; border-radius: 24px;">
+        <div class="text-white text-center py-4"
+             style="background: linear-gradient(135deg, #6c5ce7, #a29bfe);">
+            <h4 class="mb-0 fw-bold"><i class="bi bi-gear-fill me-2"></i>Service Details</h4>
         </div>
 
-        <div class="card-body p-4">
-
-            <form asp-action="UpsertService" method="post">
+        <div class="card-body p-4 p-md-5">
+            <form asp-action="UpsertService" method="post" id="serviceForm">
                 @Html.AntiForgeryToken()
-
-                <div asp-validation-summary="All" class="text-danger mb-3"></div>
-
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3 small"></div>
                 <input type="hidden" asp-for="ServiceID" />
 
-                <!-- Service Name -->
-                <div class="mb-3">
-                    <label asp-for="Serv" class="form-label fw-semibold">Service Name</label>
-                    <input asp-for="Serv" class="form-control shadow-sm" />
-                    <span asp-validation-for="Serv" class="text-danger small"></span>
+                <div class="mb-4">
+                    <label asp-for="Serv" class="form-label small fw-bold text-muted text-uppercase">Service Name</label>
+                    <div class="input-group modern-input-group">
+                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-tag text-primary"></i></span>
+                        <input asp-for="Serv" class="form-control border-start-0 ps-0 shadow-none" placeholder="e.g. Professional DJ" required />
+                    </div>
+                    <span asp-validation-for="Serv" class="text-danger x-small mt-1"></span>
                 </div>
 
-                <!-- Price -->
-                <div class="mb-3">
-                    <label asp-for="Price" class="form-label fw-semibold">Price</label>
-                    <input asp-for="Price" class="form-control shadow-sm" type="number" step="0.01" />
-                    <span asp-validation-for="Price" class="text-danger small"></span>
+                <div class="mb-5">
+                    <label asp-for="Price" class="form-label small fw-bold text-muted text-uppercase">Price (€)</label>
+                    <div class="input-group modern-input-group">
+                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-currency-euro text-primary"></i></span>
+                        <input asp-for="Price" id="priceInput" type="number" step="0.01" class="form-control border-start-0 ps-0 shadow-none" placeholder="0.00" required />
+                    </div>
+                    <div id="priceError" class="text-danger x-small mt-1"></div>
+                    <span asp-validation-for="Price" class="text-danger x-small mt-1"></span>
                 </div>
 
-                <!-- Buttons -->
-                <div class="d-flex justify-content-between mt-4">
-
-                    <a asp-action="PackagesAndServices"
-                       class="btn btn-cancel px-4">
-                        Cancel
-                    </a>
-
-                    <button type="submit" class="btn btn-primary px-4">
-                        @(Model.ServiceID == 0 ? "Create" : "Save Changes")
-                    </button>
+                <div class="row g-3">
+                    <div class="col-6">
+                        <a asp-action="PackagesAndServices" class="btn btn-outline-secondary w-100 py-3 fw-bold rounded-pill">
+                            Cancel
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <button type="submit" id="submitBtn" class="btn btn-modern-primary w-100 py-3 shadow">
+                            @(Model.ServiceID == 0 ? "Create" : "Save Changes")
+                        </button>
+                    </div>
                 </div>
-
             </form>
         </div>
     </div>
 </div>
 
+<style>
+    .fw-black {
+        font-weight: 900;
+    }
+
+    .bg-soft-primary {
+        background: rgba(108, 92, 231, 0.08);
+    }
+
+    .glass-card {
+        background: white;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .modern-input-group {
+        border-radius: 12px;
+        border: 1.5px solid #dee2e6;
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+        .modern-input-group:focus-within {
+            border-color: #6c5ce7;
+            box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.1);
+        }
+
+        .modern-input-group .form-control {
+            border: none;
+            padding: 12px;
+        }
+
+    .btn-modern-primary {
+        background: #6c5ce7;
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-weight: 700;
+        transition: all 0.3s ease;
+    }
+
+        .btn-modern-primary:hover:not(:disabled) {
+            background: #5b4bc4;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(108, 92, 231, 0.2);
+        }
+
+        .btn-modern-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+    .x-small {
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+</style>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        const priceInput = document.getElementById("priceInput");
+        const priceError = document.getElementById("priceError");
+        const submitBtn = document.getElementById("submitBtn");
+
+        priceInput.addEventListener("input", function() {
+            const val = parseFloat(this.value);
+
+            // Validation logic similar to the reservation page
+            if (this.value !== "" && val < 0) {
+                priceError.textContent = "✖ Price cannot be negative";
+                this.closest('.modern-input-group').style.borderColor = "#dc3545";
+                submitBtn.disabled = true;
+            } else if (this.value !== "" && val === 0) {
+                priceError.textContent = "⚠ Is this service free? (Price is 0)";
+                this.closest('.modern-input-group').style.borderColor = "#ffc107";
+                submitBtn.disabled = false;
+            } else {
+                priceError.textContent = "";
+                this.closest('.modern-input-group').style.borderColor = "";
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
 }

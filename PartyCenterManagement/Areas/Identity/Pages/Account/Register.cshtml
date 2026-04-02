@@ -1,52 +1,149 @@
 ﻿@page
 @model RegisterModel
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Create Account";
 }
 
-<h1 style="text-align:center">@ViewData["Title"]</h1>
-
-<div class="row justify-content-center">
-    <div class="col-md-4">
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2 style="text-align:center">Create a new account.</h2>
-            <hr />
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                <label asp-for="Input.Email">Email</label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.FirstName" class="form-control" aria-required="true" placeholder="John" />
-                <label asp-for="Input.FirstName">First name</label>
-                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.LastName" class="form-control" aria-required="true" placeholder="Doe" />
-                <label asp-for="Input.LastName">Last name</label>
-                <span asp-validation-for="Input.LastName" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.PhoneNumber" class="form-control" aria-required="true" placeholder="089 123 1234" />
-                <label asp-for="Input.PhoneNumber" class="form-label"></label>
-                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label asp-for="Input.Password">Password</label>
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label asp-for="Input.ConfirmPassword">Confirm Password</label>
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-            </div>
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
-        </form>
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <span class="badge rounded-pill bg-soft-primary text-primary px-3 py-2 mb-3 shadow-sm">Join the Community</span>
+        <h1 class="display-4 fw-black text-dark">@ViewData["Title"]</h1>
+        <p class="text-muted fs-5">Set up your profile to start managing your events.</p>
     </div>
-   
+
+    <div class="glass-card shadow-lg mx-auto border-0" style="max-width: 650px; overflow: hidden; border-radius: 24px;">
+
+        <div class="text-white text-center py-4"
+             style="background: linear-gradient(135deg, #6c5ce7, #a29bfe);">
+            <h4 class="mb-0 fw-bold"><i class="bi bi-person-plus-fill me-2"></i>Registration Details</h4>
+        </div>
+
+        <div class="card-body p-4 p-md-5">
+            <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger small mb-3" role="alert"></div>
+
+                <div class="mb-4">
+                    <label asp-for="Input.Email" class="form-label small fw-bold text-muted text-uppercase">Email Address</label>
+                    <div class="input-group modern-input-group">
+                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-envelope text-primary"></i></span>
+                        <input asp-for="Input.Email" class="form-control border-start-0 ps-0 shadow-none" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                    </div>
+                    <span asp-validation-for="Input.Email" class="text-danger x-small mt-1"></span>
+                </div>
+
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <label asp-for="Input.FirstName" class="form-label small fw-bold text-muted text-uppercase">First Name</label>
+                        <div class="input-group modern-input-group">
+                            <span class="input-group-text bg-white border-end-0"><i class="bi bi-person text-primary"></i></span>
+                            <input asp-for="Input.FirstName" class="form-control border-start-0 ps-0 shadow-none" placeholder="John" />
+                        </div>
+                        <span asp-validation-for="Input.FirstName" class="text-danger x-small mt-1"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Input.LastName" class="form-label small fw-bold text-muted text-uppercase">Last Name</label>
+                        <div class="input-group modern-input-group">
+                            <span class="input-group-text bg-white border-end-0"><i class="bi bi-person text-primary"></i></span>
+                            <input asp-for="Input.LastName" class="form-control border-start-0 ps-0 shadow-none" placeholder="Doe" />
+                        </div>
+                        <span asp-validation-for="Input.LastName" class="text-danger x-small mt-1"></span>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Input.PhoneNumber" class="form-label small fw-bold text-muted text-uppercase">Phone Number</label>
+                    <div class="input-group modern-input-group">
+                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-telephone text-primary"></i></span>
+                        <input asp-for="Input.PhoneNumber" class="form-control border-start-0 ps-0 shadow-none" placeholder="089 123 1234" />
+                    </div>
+                    <span asp-validation-for="Input.PhoneNumber" class="text-danger x-small mt-1"></span>
+                </div>
+
+                <div class="row g-4 mb-5">
+                    <div class="col-md-6">
+                        <label asp-for="Input.Password" class="form-label small fw-bold text-muted text-uppercase">Password</label>
+                        <div class="input-group modern-input-group">
+                            <span class="input-group-text bg-white border-end-0"><i class="bi bi-lock-fill text-primary"></i></span>
+                            <input asp-for="Input.Password" class="form-control border-start-0 ps-0 shadow-none" autocomplete="new-password" placeholder="••••••••" />
+                        </div>
+                        <span asp-validation-for="Input.Password" class="text-danger x-small mt-1"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Input.ConfirmPassword" class="form-label small fw-bold text-muted text-uppercase">Confirm Password</label>
+                        <div class="input-group modern-input-group">
+                            <span class="input-group-text bg-white border-end-0"><i class="bi bi-check-circle-fill text-primary"></i></span>
+                            <input asp-for="Input.ConfirmPassword" class="form-control border-start-0 ps-0 shadow-none" autocomplete="new-password" placeholder="••••••••" />
+                        </div>
+                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger x-small mt-1"></span>
+                    </div>
+                </div>
+
+                <button id="registerSubmit" type="submit" class="btn btn-modern-primary w-100 py-3 shadow mb-4">
+                    Create My Account
+                </button>
+
+                <div class="text-center">
+                    <p class="text-muted small">Already have an account? <a asp-page="./Login" class="text-primary fw-bold text-decoration-none">Login here</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
+
+<style>
+    /* Reuse consistent styles from Management/User pages */
+    .fw-black {
+        font-weight: 900;
+    }
+
+    .bg-soft-primary {
+        background: rgba(108, 92, 231, 0.08);
+    }
+
+    .glass-card {
+        background: white;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .modern-input-group {
+        border-radius: 12px;
+        border: 1.5px solid #dee2e6;
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+        .modern-input-group:focus-within {
+            border-color: #6c5ce7;
+            box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.1);
+        }
+
+        .modern-input-group .form-control {
+            border: none;
+            padding: 12px;
+        }
+
+    .btn-modern-primary {
+        background: #6c5ce7;
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-weight: 700;
+        transition: all 0.3s ease;
+    }
+
+        .btn-modern-primary:hover {
+            background: #5b4bc4;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(108, 92, 231, 0.2);
+        }
+
+    .x-small {
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+</style>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

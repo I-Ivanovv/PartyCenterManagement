@@ -5,74 +5,152 @@
 }
 
 <div class="container py-5">
-
-    <h1 class="text-center mb-5">Admin Dashboard</h1>
-
-
-    <form method="get" class="row g-3 mb-5 justify-content-center">
-
-        <div class="col-md-3">
-            <label>Start Date</label>
-            <input type="date" name="startDate" class="form-control" value="@Model.StartDate?.ToString("yyyy-MM-dd")">
+    <div class="d-flex justify-content-between align-items-end mb-5">
+        <div>
+            <span class="badge rounded-pill bg-soft-primary text-primary px-3 py-2 mb-2 shadow-sm">Management Console</span>
+            <h1 class="display-5 fw-black text-dark mb-0">Admin Dashboard</h1>
         </div>
-
-        <div class="col-md-3">
-            <label>End Date</label>
-            <input type="date" name="endDate" class="form-control" value="@Model.EndDate?.ToString("yyyy-MM-dd")">
+        <div class="text-end d-none d-md-block">
+            <p class="text-muted small mb-0">System Status: <span class="text-success fw-bold">● Active</span></p>
+            <p class="text-muted small">Current View: @(Model.StartDate?.ToShortDateString() ?? "All Time") - @(Model.EndDate?.ToShortDateString() ?? "Now")</p>
         </div>
-
-        <div class="col-md-2 align-self-end d-flex gap-2">
-            <button type="submit" class="btn btn-primary w-100">Filter</button>
-
-            <a href="@Url.Action("Dashboard", "Admin")" class="btn btn-secondary w-100">Reset</a>
-        </div>
-
-    </form>
-
-
-    <div class="row g-4 text-center">
-
-
-        <div class="col-md-3">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5>Total Reservations</h5>
-                    <h2>@Model.TotalReservations</h2>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="col-md-3">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5>Total Revenue</h5>
-                    <h2>@Model.TotalRevenue.ToString("C")</h2>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="col-md-3">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5>Most Popular Package</h5>
-                    <h4>@Model.MostPopularPackage</h4>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="col-md-3">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5>Upcoming Reservations</h5>
-                    <h2>@Model.UpcomingReservations</h2>
-                </div>
-            </div>
-        </div>
-
-
     </div>
 
+    <div class="glass-card p-4 mb-5 border-0 shadow-sm">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label small fw-bold text-muted text-uppercase">Start Date</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-calendar-range text-primary"></i></span>
+                    <input type="date" name="startDate" class="form-control border-start-0 ps-0" value="@Model.StartDate?.ToString("yyyy-MM-dd")">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label small fw-bold text-muted text-uppercase">End Date</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-calendar-check text-primary"></i></span>
+                    <input type="date" name="endDate" class="form-control border-start-0 ps-0" value="@Model.EndDate?.ToString("yyyy-MM-dd")">
+                </div>
+            </div>
+            <div class="col-md-4 d-flex gap-2">
+                <button type="submit" class="btn btn-modern-primary flex-grow-1">
+                    <i class="bi bi-filter-left me-2"></i>Apply Filter
+                </button>
+                <a href="@Url.Action("Dashboard", "Admin")" class="btn btn-modern-outline-secondary">
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <div class="row g-4 text-center">
+        <div class="col-md-3">
+            <div class="stat-card p-4 h-100 border-0 shadow-sm transition hover-up">
+                <div class="icon-shape bg-soft-primary text-primary rounded-circle mx-auto mb-3">
+                    <i class="bi bi-journal-check fs-4"></i>
+                </div>
+                <h6 class="text-muted fw-bold small text-uppercase">Total Bookings</h6>
+                <h2 class="display-6 fw-black mb-0">@Model.TotalReservations</h2>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card p-4 h-100 border-0 shadow-sm transition hover-up bg-primary-gradient">
+                <div class="icon-shape bg-white-transparent text-white rounded-circle mx-auto mb-3">
+                    <i class="bi bi-cash-stack fs-4"></i>
+                </div>
+                <h6 class="text-white-50 fw-bold small text-uppercase">Total Revenue</h6>
+                <h2 class="display-6 fw-black mb-0 text-white">€@Model.TotalRevenue.ToString("F2")</h2>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card p-4 h-100 border-0 shadow-sm transition hover-up">
+                <div class="icon-shape bg-soft-accent text-accent rounded-circle mx-auto mb-3">
+                    <i class="bi bi-star-fill fs-4"></i>
+                </div>
+                <h6 class="text-muted fw-bold small text-uppercase">Top Package</h6>
+                <h4 class="fw-black text-dark mb-0 mt-2">@Model.MostPopularPackage</h4>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card p-4 h-100 border-0 shadow-sm transition hover-up">
+                <div class="icon-shape bg-soft-success text-success rounded-circle mx-auto mb-3">
+                    <i class="bi bi-clock-history fs-4"></i>
+                </div>
+                <h6 class="text-muted fw-bold small text-uppercase">Upcoming</h6>
+                <h2 class="display-6 fw-black mb-0 text-dark">@Model.UpcomingReservations</h2>
+            </div>
+        </div>
+    </div>
 </div>
+
+<style>
+    /* Card Styling */
+    .stat-card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 20px;
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    .bg-primary-gradient {
+        background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%) !important;
+    }
+
+    .icon-shape {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .bg-white-transparent {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Hover State */
+    .hover-up:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+    }
+
+    /* Buttons */
+    .btn-modern-primary {
+        background: #6c5ce7;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+        .btn-modern-primary:hover {
+            background: #5b4bc4;
+            color: white;
+            transform: scale(1.02);
+        }
+
+    .btn-modern-outline-secondary {
+        border: 2px solid #dee2e6;
+        border-radius: 12px;
+        color: #6c757d;
+        transition: all 0.3s ease;
+    }
+
+        .btn-modern-outline-secondary:hover {
+            background: #f8f9fa;
+            color: #212529;
+        }
+
+    /* Inputs */
+    .form-control:focus {
+        border-color: #6c5ce7;
+        box-shadow: 0 0 0 0.25rem rgba(108, 92, 231, 0.1);
+    }
+
+    .fw-black {
+        font-weight: 900;
+    }
+</style>
