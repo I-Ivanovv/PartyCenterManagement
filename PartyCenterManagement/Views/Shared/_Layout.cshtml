@@ -90,6 +90,10 @@
             transition: all 0.2s ease;
         }
 
+            .nav-link:hover {
+                 border-radius:50px;
+            }
+
         /* --- Admin Dropdown Fix --- */
         .dropdown-menu {
             position: absolute !important;
@@ -115,43 +119,58 @@
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(10px);
             border-radius: 15px;
-            padding: 6px 12px;
-            box-shadow: 0 8px 20px rgba(108, 92, 231, 0.15);
+            padding: 6px 16px;
+            box-shadow: 0 8px 20px rgba(108, 92, 231, 0.1);
             border: 1px solid var(--violet-soft);
             display: flex;
-            align-items: center;
+            align-items: center; /* Vertical alignment fix */
+            justify-content: center;
         }
 
-            /* Spacing for username */
-            #login-partial-wrapper .nav-item {
-                margin: 0 10px;
+            /* The partial list centering fix */
+            #login-partial-wrapper ul {
+                display: flex;
+                align-items: center;
+                margin: 0;
+                padding: 0;
+                list-style: none;
             }
 
-            /* Username styling */
+            /* Username Hover Effect */
             #login-partial-wrapper .nav-link {
                 color: var(--violet-deep) !important;
                 font-weight: 800;
                 font-size: 0.95rem;
                 padding: 5px 10px !important;
+                transition: all 0.2s ease;
             }
 
-            /* Logout button as a solid interesting action */
+                #login-partial-wrapper .nav-link:hover {
+                    color: var(--violet-main) !important;
+                    transform: translateY(-1px);
+                }
+
+            /* Logout Button Centering & Hover */
             #login-partial-wrapper button,
             #login-partial-wrapper .btn-link {
                 background: var(--violet-main) !important;
                 color: white !important;
                 border-radius: 10px !important;
-                padding: 6px 16px !important;
+                padding: 8px 18px !important; /* Increased padding for centering look */
                 font-weight: 700;
                 border: none;
                 text-decoration: none;
-                transition: transform 0.2s;
-                margin-left: 10px; /* Space between username and logout */
+                transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                margin: 0 0 0 10px; /* Reset bootstrap margins */
+                line-height: 1; /* Helps vertical centering */
+                display: flex;
+                align-items: center;
             }
 
                 #login-partial-wrapper button:hover {
-                    transform: scale(1.05);
                     background: var(--violet-deep) !important;
+                    transform: scale(1.08);
+                    box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
                 }
 
         /* --- Main Content Area --- */

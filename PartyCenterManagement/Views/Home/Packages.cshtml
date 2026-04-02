@@ -7,7 +7,7 @@
 
 <div class="container py-5">
     <div class="text-center mb-5">
-        <span class="badge rounded-pill bg-soft-primary text-primary px-3 py-2 mb-3">Celebration Ready</span>
+        <span class="badge rounded-pill bg-soft-primary text-primary px-3 py-2 mb-3 shadow-sm">Celebration Ready</span>
         <h1 class="display-4 fw-black text-dark">Choose Your Party</h1>
         <p class="text-muted fs-5">All-inclusive packages designed for maximum fun.</p>
     </div>
@@ -16,53 +16,55 @@
         @foreach (var package in Model)
         {
             <div class="col-lg-4 col-md-6 d-flex">
-                @* d-flex here makes all columns the same height *@
-                <div class="glass-card package-card w-100 border-0 shadow-sm d-flex flex-column">
+                <div class="glass-card package-card w-100 border-0 shadow-sm d-flex flex-column overflow-hidden">
 
-                    @* Added solid background class for high contrast header *@
-                    <div class="package-header text-center py-4 bg-primary text-white" style="border-radius: 24px 24px 0 0;">
-                        <h3 class="mb-0 text-white">@package.Name</h3>
+                    @* NEW GRADIENT HEADER *@
+                    <div class="card-header-gradient p-4 text-white d-flex justify-content-between align-items-center">
+                        <div>
+                            <small class="opacity-75 d-block text-uppercase fw-bold" style="font-size: 0.65rem; letter-spacing: 1px;">Experience</small>
+                            <h4 class="mb-0 fw-bold">@package.Name</h4>
+                        </div>
+                        <div class="icon-box-sm" style="background: rgba(255,255,255,0.2); backdrop-filter: blur(4px); border-radius: 12px;">
+                            <i class="bi bi-gift-fill fs-5"></i>
+                        </div>
                     </div>
 
-                    <div class="card-body p-4 d-flex flex-column flex-grow-1">
+                    <div class="card-body p-4 d-flex flex-column flex-grow-1 bg-white">
                         <div class="text-center mb-4">
                             <span class="display-5 fw-black text-primary">€@package.Price</span>
-                            <p class="text-muted small">Total Package Price</p>
+                            <p class="text-muted small text-uppercase fw-bold" style="letter-spacing: 1px;">Total Investment</p>
                         </div>
 
-                        <div class="d-flex justify-content-around mb-4 py-3 border-top border-bottom border-light">
-                            @if (package.MaxGuests != 0)
-                            {
-                                <div class="text-center">
-                                    <i class="bi bi-people text-primary d-block fs-4"></i>
-                                    <small class="fw-bold text-dark">@package.MaxGuests Guests</small>
+                        <div class="row g-2 mb-4">
+                            <div class="col-6">
+                                <div class="p-3 rounded-4 bg-light text-center">
+                                    <small class="text-muted d-block mb-1 text-uppercase fw-bold" style="font-size: 0.6rem;">Max Guests</small>
+                                    <span class="fw-bold text-dark"><i class="bi bi-people me-1"></i> @package.MaxGuests</span>
                                 </div>
-                            }
-                            @if (package.MaxLength != 0)
-                            {
-                                <div class="text-center">
-                                    <i class="bi bi-clock text-primary d-block fs-4"></i>
-                                    <small class="fw-bold text-dark">@package.MaxLength Hours</small>
+                            </div>
+                            <div class="col-6">
+                                <div class="p-3 rounded-4 bg-light text-center">
+                                    <small class="text-muted d-block mb-1 text-uppercase fw-bold" style="font-size: 0.6rem;">Duration</small>
+                                    <span class="fw-bold text-dark"><i class="bi bi-clock me-1"></i> @package.MaxLength hrs</span>
                                 </div>
-                            }
+                            </div>
                         </div>
 
                         <div class="package-services-list mb-4">
-                            <h6 class="text-uppercase fw-bold text-muted small mb-3">Includes:</h6>
+                            <h6 class="text-uppercase fw-bold text-muted mb-3" style="font-size: 0.7rem; letter-spacing: 1px;">What's Included:</h6>
                             <ul class="list-unstyled">
                                 @foreach (var ps in package.PackageServices)
                                 {
                                     <li class="mb-2 d-flex align-items-start">
-                                        <i class="bi bi-check-circle-fill text-accent me-2 mt-1"></i>
-                                        <span class="text-dark">@ps.Service.Serv</span>
+                                        <div class="text-primary me-2"><i class="bi bi-check2-circle"></i></div>
+                                        <span class="text-dark small fw-medium">@ps.Service.Serv</span>
                                     </li>
                                 }
                             </ul>
                         </div>
 
-                        @* mt-auto pushes this button to the bottom regardless of service count *@
                         <a href="@Url.Action("Reserve", "Reservation", new { packageId = package.PackageID })"
-                           class="btn btn-primary btn-lg rounded-pill w-100 shadow-sm mt-auto">
+                           class="btn btn-modern-primary w-100 mt-auto">
                             Reserve Now
                         </a>
                     </div>
@@ -71,21 +73,20 @@
         }
     </div>
 
-    <div class="glass-card p-5">
+    @* ADD-ONS SECTION MATCHING THE THEME *@
+    <div class="glass-card p-5 mt-5">
         <div class="text-center mb-5">
+            <span class="badge rounded-pill bg-soft-primary text-primary px-3 py-2 mb-2">Extra Magic</span>
             <h2 class="fw-black mb-2">Add-ons</h2>
-            <p class="text-muted">Personalize your celebration with extra magic.</p>
+            <p class="text-muted">Personalize your celebration with these extra services.</p>
         </div>
 
         <div class="row g-3">
             @foreach (var service in ViewBag.Services)
             {
                 <div class="col-md-3">
-                    <div class="info-box-vert h-100 text-center p-3">
-                        <div class="mb-2">
-                            <i class=" text-accent fs-4"></i>
-                        </div>
-                        <h6 class="fw-bold mb-1">@service.Serv</h6>
+                    <div class="p-3 rounded-4 bg-white border border-light text-center shadow-sm h-100 transition-hover">
+                        <h6 class="fw-bold mb-1 text-dark">@service.Serv</h6>
                         <p class="text-primary fw-bold mb-0">@((service.Price > 0) ? $"€{service.Price}" : "Included")</p>
                     </div>
                 </div>
@@ -93,3 +94,62 @@
         </div>
     </div>
 </div>
+
+<style>
+    /* Reuse the smooth styles from your Reservation page */
+    .package-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        border-radius: 24px;
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+        .package-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(108, 92, 231, 0.15) !important;
+        }
+
+    .card-header-gradient {
+        background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+    }
+
+    .icon-box-sm {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-modern-primary {
+        background: #6c5ce7;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 12px 20px;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        text-align: center;
+    }
+
+        .btn-modern-primary:hover {
+            background: #4834d4;
+            color: white;
+            transform: scale(1.02);
+        }
+
+    .transition-hover:hover {
+        border-color: #6c5ce7 !important;
+        transform: translateY(-3px);
+        transition: all 0.3s ease;
+    }
+
+    .fw-black {
+        font-weight: 900;
+    }
+
+    .bg-soft-primary {
+        background: rgba(108, 92, 231, 0.1);
+    }
+</style>

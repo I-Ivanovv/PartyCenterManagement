@@ -1070,21 +1070,42 @@ header, main, footer {
     background: #6c5ce7;
     color: white;
     border: none;
-    border-radius: 50px;
-    font-weight: 700;
+    border-radius: 12px;
+    font-weight: 600;
     transition: all 0.3s ease;
-    padding: 12px 24px;
+    /* Prevents the blue/white highlight box on mobile tap */
+    -webkit-tap-highlight-color: transparent;
 }
 
     .btn-modern-primary:hover {
-        color:white;
         background: #5b4bc4;
-        transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(108, 92, 231, 0.2);
+        color: white;
+        transform: scale(1.02);
     }
-    
+
+    /* --- THE FIX FOR HOLDING THE BUTTON --- */
+    .btn-modern-primary:active,
+    .btn-modern-primary:focus {
+        /* Keeps the background from going white */
+        background: #5b4bc4 !important;
+        /* Keeps the text from going black */
+        color: white !important;
+        /* Removes the browser's default white/blue glow */
+        outline: none !important;
+        box-shadow: none !important;
+        /* Makes it feel like a real physical press */
+        transform: scale(0.96);
+        /* Dims it slightly instead of washing it out */
+        filter: brightness(0.9);
+    }
 
 .x-small {
     font-size: 0.75rem;
     font-weight: 600;
+}
+
+
+.nav-pill-main .nav-item.dropdown .nav-link:focus,
+.nav-pill-main .nav-item.dropdown .nav-link:active {
+    color: white !important;
 }
