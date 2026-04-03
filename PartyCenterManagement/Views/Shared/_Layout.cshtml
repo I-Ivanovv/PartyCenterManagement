@@ -251,7 +251,18 @@
                             @if (User.Identity.IsAuthenticated)
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Reservation" asp-action="MyReservations">Reservations</a>
+                                    <a class="nav-link" asp-controller="Reservation" asp-action="MyReservations">My Reservations</a>
+                                </li>
+                            }
+                            @if (User.IsInRole("Admin") || User.IsInRole("Employee"))
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="employeeDrop" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Employee
+                                    </a>
+                                    <ul class="dropdown-menu shadow-lg" aria-labelledby="employeeDrop">
+                                        <li><a class="dropdown-item" asp-controller="Employee" asp-action="ManageReservations">Manage Reservations</a></li>
+                                    </ul>
                                 </li>
                             }
 

@@ -203,5 +203,46 @@ namespace PartyCenterManagement.Services
                 EndDate = end
             };
         }
+        public async Task UpdateStatusAsync(int id, string status)
+        {
+            var reservation = await _db.Reservations.FindAsync(id);
+            if (reservation != null)
+            {
+                reservation.Status = status;
+                await _db.SaveChangesAsync();
+            }
+        }
+
+        public async Task MarkAsPaidAsync(int id)
+        {
+            var reservation = await _db.Reservations.FindAsync(id);
+            if (reservation != null)
+            {
+                reservation.Paid = true;
+                await _db.SaveChangesAsync();
+            }
+        }
+
+        public async Task<List<Reservation>> GetAllReservationsAsync(DateTime? date = null, bool upcomingOnly = false)
+        {
+            var query = _db.Reservations
+                .Include(r => r.Package)
+                .Include(r => r.User)
+                .Include(r => r.ReservationServices)
+                    .ThenInclude(rs => rs.Service)
+                .AsQueryable();
+
+            if (date.HasValue)
+            {
+                query = query.Where(r => r.Date.Date == date.Value.Date);
+            }
+
+            if (upcomingOnly)
+            {
+                query = query.Where(r => r.Date >= DateTime.Now && r.Status != "Cancelled");
+            }
+
+            return await query.OrderByDescending(r => r.Date).ToListAsync();
+        }
     }
 }

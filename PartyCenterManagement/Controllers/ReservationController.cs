@@ -40,12 +40,12 @@ namespace PartyCenterManagement.Controllers
                 if (reservation == null)
                     return NotFound();
 
-                if ((reservation.Date - DateTime.Now).TotalDays <= 5)
+                if ((reservation.Date - DateTime.Now).TotalDays <= 5 && User.IsInRole("Client"))
                 {
                     TempData["Error"] = "Reservations cannot be edited within 5 days.";
                     return RedirectToAction("MyReservations");
                 }
-                if (reservation.Status == "Cancelled")
+                if (reservation.Status == "Cancelled" && User.IsInRole("Client"))
                 {
                     TempData["Error"] = "Cancelled reservations cannot be edited.";
                     return RedirectToAction("MyReservations");
@@ -83,7 +83,7 @@ namespace PartyCenterManagement.Controllers
             if (selectedPackage == null)
                 ModelState.AddModelError("", "Package not found.");
 
-            if (model.Date == null || model.Date < DateTime.Today)
+            if (model.Date == null || model.Date < DateTime.Today && User.IsInRole("Client"))
                 ModelState.AddModelError("Date", "Date must be today or later.");
 
             if (model.Time == null)
@@ -115,12 +115,12 @@ namespace PartyCenterManagement.Controllers
             {
                 var reservation = await _reservationServices.GetReservationByIdAsync(model.ReservationID.Value);
 
-                if ((reservation.Date - DateTime.Now).TotalDays <= 5)
+                if ((reservation.Date - DateTime.Now).TotalDays <= 5 && User.IsInRole("Client"))
                 {
                     TempData["Error"] = "Reservations cannot be edited within 5 days.";
                     return RedirectToAction("MyReservations");
                 }
-                if (reservation.Status == "Cancelled")
+                if (reservation.Status == "Cancelled" && User.IsInRole("Client"))
                 {
                     TempData["Error"] = "Cancelled reservations cannot be edited.";
                     return RedirectToAction("MyReservations");
@@ -161,6 +161,11 @@ namespace PartyCenterManagement.Controllers
                         model.PhoneNumber,
                         extraServices);
                 }
+            }
+            if (!User.IsInRole("Client"))
+            {
+                return RedirectToAction("ManageReservations", "Employee");
+
             }
 
             return RedirectToAction("Index", "Home");
