@@ -190,7 +190,7 @@ namespace PartyCenterManagement.Services
                 .OrderByDescending(g => g.Count())
                 .FirstOrDefault()?.Key ?? "N/A";
             var upcoming = reservations
-                .Where(r => r.Status != "Cancelled")
+                .Where(r => r.Status != "Cancelled" || r.Status != "Declined")
                 .Count(r => r.Date > DateTime.Now);
 
             return new AdminDashboardViewModel
@@ -223,7 +223,7 @@ namespace PartyCenterManagement.Services
             }
         }
 
-        public async Task<List<Reservation>> GetAllReservationsAsync(DateTime? date = null, bool upcomingOnly = false)
+        public async Task<List<Reservation>> GetAllReservationsAsync(DateTime? startDate = null, DateTime? endDate = null, bool upcomingOnly = false)
         {
             var query = _db.Reservations
                 .Include(r => r.Package)
@@ -232,14 +232,20 @@ namespace PartyCenterManagement.Services
                     .ThenInclude(rs => rs.Service)
                 .AsQueryable();
 
-            if (date.HasValue)
+            if (startDate.HasValue)
             {
-                query = query.Where(r => r.Date.Date == date.Value.Date);
+                query = query.Where(r => r.Date >= startDate.Value.Date);
+            }
+
+            if (endDate.HasValue)
+            {
+                var endLimit = endDate.Value.Date.AddDays(1).AddTicks(-1);
+                query = query.Where(r => r.Date <= endLimit);
             }
 
             if (upcomingOnly)
             {
-                query = query.Where(r => r.Date >= DateTime.Now && r.Status != "Cancelled");
+                query = query.Where(r => r.Date >= DateTime.Now && r.Status != "Cancelled" || r.Status != "Declined");
             }
 
             return await query.OrderByDescending(r => r.Date).ToListAsync();

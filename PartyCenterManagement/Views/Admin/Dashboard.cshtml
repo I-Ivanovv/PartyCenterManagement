@@ -40,6 +40,18 @@
                     <i class="bi bi-arrow-counterclockwise"></i>
                 </a>
             </div>
+
+            <div class="col-12 mt-3 pt-3 border-top">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="small text-muted italic">Detailed view for the range above:</span>
+                    <a asp-controller="Employee" asp-action="ManageReservations"
+                       asp-route-startDate="@Model.StartDate?.ToString("yyyy-MM-dd")"
+                       asp-route-endDate="@Model.EndDate?.ToString("yyyy-MM-dd")"
+                       class="btn btn-sm btn-outline-primary px-4 rounded-pill">
+                        Open Manager <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
         </form>
     </div>
 

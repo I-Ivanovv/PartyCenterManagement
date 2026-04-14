@@ -11,9 +11,13 @@ namespace PartyCenterManagement.Controllers
         {
             _reservationService = reservationService;
         }
-        public async Task<IActionResult> ManageReservations(DateTime? filterDate, bool upcomingOnly = false)
+        public async Task<IActionResult> ManageReservations(DateTime? startDate, DateTime? endDate, bool upcomingOnly = false)
         {
-            var reservations = await _reservationService.GetAllReservationsAsync(filterDate, upcomingOnly);
+            var reservations = await _reservationService.GetAllReservationsAsync(startDate, endDate, upcomingOnly);
+
+            ViewBag.StartDate = startDate;
+            ViewBag.EndDate = endDate;
+
             return View(reservations);
         }
 
