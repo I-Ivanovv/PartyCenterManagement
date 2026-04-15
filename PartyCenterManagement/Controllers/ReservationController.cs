@@ -40,6 +40,7 @@ namespace PartyCenterManagement.Controllers
                 if (reservation == null)
                     return NotFound();
 
+                // Security check for clients editing close to the date
                 if ((reservation.Date - DateTime.Now).TotalDays <= 5 && User.IsInRole("Client"))
                 {
                     TempData["Error"] = "Reservations cannot be edited within 5 days.";
@@ -77,23 +78,48 @@ namespace PartyCenterManagement.Controllers
         {
             var packages = await _packageServices.GetPackages();
             var services = await _packageServices.GetServices();
-
             var selectedPackage = packages.FirstOrDefault(p => p.PackageID == model.PackageID);
 
+            // 1. Validation Logic
             if (selectedPackage == null)
                 ModelState.AddModelError("", "Package not found.");
 
-            if (model.Date == null || model.Date < DateTime.Today && User.IsInRole("Client"))
+            // Employee fix: only clients are restricted from picking old dates
+            bool isClient = User.IsInRole("Client");
+            if (model.Date == null || (isClient && model.Date < DateTime.Today))
                 ModelState.AddModelError("Date", "Date must be today or later.");
 
             if (model.Time == null)
                 ModelState.AddModelError("Time", "Please choose a time.");
 
-            if (model.GuestCount > selectedPackage.MaxGuests)
-                ModelState.AddModelError("GuestCount", $"Maximum guests: {selectedPackage.MaxGuests}");
+            if (selectedPackage != null)
+            {
+                if (model.GuestCount > selectedPackage.MaxGuests)
+                    ModelState.AddModelError("GuestCount", $"Maximum guests: {selectedPackage.MaxGuests}");
 
-            if (model.Length > selectedPackage.MaxLength)
-                ModelState.AddModelError("Length", $"Maximum length: {selectedPackage.MaxLength}");
+                if (model.Length > selectedPackage.MaxLength)
+                    ModelState.AddModelError("Length", $"Maximum length: {selectedPackage.MaxLength}");
+            }
+
+            // 2. Overlap Check (Only blocks if existing status is "Confirmed")
+            if (ModelState.IsValid && model.Date.HasValue && model.Time.HasValue)
+            {
+                DateTime newStart = model.Date.Value.Date + model.Time.Value;
+                DateTime newEnd = newStart.AddHours((double)model.Length + 1); // +1 hour for cleanup
+
+                var allReservations = await _reservationServices.GetAllReservationsAsync();
+
+                bool isOverlapping = allReservations.Any(r =>
+                    r.Status == "Confirmed" && // Only check against Confirmed slots
+                    r.ReservationID != model.ReservationID && // Don't collide with self
+                    r.Date.Date == model.Date.Value.Date &&
+                    newStart < r.Date.AddHours((double)r.Length + 1) &&
+                    newEnd > r.Date
+                );
+
+                if (isOverlapping)
+                    ModelState.AddModelError("Time", "This time slot is unavailable (includes 1h cleanup time).");
+            }
 
             if (!ModelState.IsValid)
             {
@@ -103,26 +129,21 @@ namespace PartyCenterManagement.Controllers
                 return View(model);
             }
 
+            // 3. Persistence Logic
             var extraServices = services
                 .Where(s => model.ServiceIds != null && model.ServiceIds.Contains(s.ServiceID))
                 .ToList();
 
             var user = await _userManager.GetUserAsync(User);
-
             DateTime reservationDateTime = model.Date.Value.Date + model.Time.Value;
 
             if (model.ReservationID != null)
             {
+                // Check edit permission again for safety
                 var reservation = await _reservationServices.GetReservationByIdAsync(model.ReservationID.Value);
-
-                if ((reservation.Date - DateTime.Now).TotalDays <= 5 && User.IsInRole("Client"))
+                if (isClient && (reservation.Date - DateTime.Now).TotalDays <= 5)
                 {
-                    TempData["Error"] = "Reservations cannot be edited within 5 days.";
-                    return RedirectToAction("MyReservations");
-                }
-                if (reservation.Status == "Cancelled" && User.IsInRole("Client"))
-                {
-                    TempData["Error"] = "Cancelled reservations cannot be edited.";
+                    TempData["Error"] = "Cannot update within 5 days of the event.";
                     return RedirectToAction("MyReservations");
                 }
 
@@ -140,39 +161,25 @@ namespace PartyCenterManagement.Controllers
                 if (user != null)
                 {
                     await _reservationServices.CreateReservationUser(
-                        reservationDateTime,
-                        model.Length,
-                        model.GuestCount,
-                        model.PackageID,
-                        model.Note,
-                        user.Id,
-                        extraServices);
+                        reservationDateTime, model.Length, model.GuestCount,
+                        model.PackageID, model.Note, user.Id, extraServices);
                 }
                 else
                 {
                     await _reservationServices.CreateReservationGuest(
-                        reservationDateTime,
-                        model.Length,
-                        model.GuestCount,
-                        model.PackageID,
-                        model.Note,
-                        model.FirstName,
-                        model.LastName,
-                        model.PhoneNumber,
-                        extraServices);
+                        reservationDateTime, model.Length, model.GuestCount,
+                        model.PackageID, model.Note, model.FirstName,
+                        model.LastName, model.PhoneNumber, extraServices);
                 }
             }
-            if (!User.IsInRole("Client"))
-            {
-                return RedirectToAction("ManageReservations", "Employee");
 
-            }
-
-            return RedirectToAction("Index", "Home");
+            return User.IsInRole("Client")
+                ? RedirectToAction("Index", "Home")
+                : RedirectToAction("ManageReservations", "Employee");
         }
 
 
-    [Authorize] // Only logged-in users can view    
+        [Authorize] // Only logged-in users can view    
     public async Task<IActionResult> MyReservations()
     {
         var user = await _userManager.GetUserAsync(User);
@@ -192,5 +199,66 @@ namespace PartyCenterManagement.Controllers
 
             return RedirectToAction("MyReservations");
         }
+
+        // This allows you to visit /Admin/ReservationCalendar
+        public IActionResult ReservationCalendar()
+        {
+            // MVC will automatically look for Views/Admin/ReservationCalendar.cshtml
+            return View();
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetCalendarEvents()
+        {
+            var reservations = await _reservationServices.GetAllReservationsAsync();
+            var activeRes = reservations.Where(r => r.Status != "Cancelled" && r.Status != "Declined").ToList();
+
+            var eventList = new List<object>();
+
+            // 1. ADD SUMMARIES (For Month View)
+            var summaries = activeRes.GroupBy(r => r.Date.Date).Select(g => new {
+                title = $"{g.Count(r => r.Status == "Confirmed")} Approved | {g.Count(r => r.Status == "Pending")} Pending",
+                start = g.Key.ToString("yyyy-MM-dd"),
+                allDay = true, // Key for Month View look
+                className = "month-summary-event",
+                backgroundColor = g.Any(r => r.Status == "Pending") ? "#ffc107" : "#28a745",
+                borderColor = "transparent",
+                textColor = g.Any(r => r.Status == "Pending") ? "#000" : "#fff"
+            });
+            eventList.AddRange(summaries);
+
+            // 2. ADD INDIVIDUAL NAMES (For Week View)
+            var individuals = activeRes.Select(r => new {
+                title = r.User != null ? $"{r.User.FirstName}" : $"{r.GFirstName}",
+                start = r.Date.ToString("yyyy-MM-ddTHH:mm:ss"),
+                end = r.Date.AddHours(r.Length).ToString("yyyy-MM-ddTHH:mm:ss"),
+                allDay = false,
+                className = "week-detail-event",
+                backgroundColor = r.Status == "Pending" ? "#ffc107" : "#28a745",
+                borderColor = "transparent",
+                textColor = r.Status == "Pending" ? "#000" : "#fff"
+            });
+            eventList.AddRange(individuals);
+
+            return Json(eventList);
+        }
+    
+
+        [HttpGet]
+        public async Task<IActionResult> GetReservationsByDay(DateTime date)
+        {
+            var reservations = await _reservationServices.GetAllReservationsAsync(date, date);
+
+            var result = reservations.Select(r => new {
+                time = r.Date.ToString("HH:mm"),
+                status = r.Status,
+                client = r.User != null ? $"{r.User.FirstName} {r.User.LastName}" : $"{r.GFirstName} {r.GLastName}",
+                // Ensure this property name matches what's in the JS (case-sensitive)
+                length = r.Length
+            });
+
+            return Json(result);
+        }
     }
+
+
 }

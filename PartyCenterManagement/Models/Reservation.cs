@@ -10,7 +10,7 @@
         public int PackageID { get; set; }
         public Package Package { get; set; }
 
-        public string Note { get; set; }
+        public string? Note { get; set; }
         public string Status { get; set; }
         public double Price { get; set; }
         public bool Paid { get; set; } = false;

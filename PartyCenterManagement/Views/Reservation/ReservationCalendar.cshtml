@@ -1,0 +1,203 @@
+﻿@{
+    ViewData["Title"] = "Reservation Calendar";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <span class="badge rounded-pill bg-soft-primary text-primary px-3 py-2 mb-2 shadow-sm">Schedule View</span>
+            <h1 class="display-5 fw-black text-dark">Booking Calendar</h1>
+        </div>
+        <a asp-action="ManageReservations" asp-controller="Employee" class="btn btn-modern-primary px-4">
+            <i class="bi bi-list-check me-2"></i>Table View
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 p-4">
+        <div id="calendar"></div>
+    </div>
+</div>
+
+<div class="modal fade" id="dayModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-black" id="modalDateLabel">Daily Schedule</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="dayReservationsList" class="mb-4"></div>
+
+                @* Role-based security check for management link *@
+                @if (User.IsInRole("Employee") || User.IsInRole("Admin"))
+                {
+                    <div class="d-grid">
+                        <a id="manageDayLink" href="#" class="btn btn-modern-primary py-2 text-center">
+                            <i class="bi bi-arrow-right-circle me-2"></i>Open in Manager
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var modalElement = document.getElementById('dayModal');
+            document.body.appendChild(modalElement);
+            var dayModal = new bootstrap.Modal(modalElement);
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek'
+                },
+                events: '@Url.Action("GetCalendarEvents", "Reservation")',
+
+                eventClassNames: function(arg) {
+                    if (arg.view.type === 'dayGridMonth') {
+                        return arg.event.classNames.includes('week-detail-event') ? ['d-none'] : [];
+                    } else {
+                        return arg.event.classNames.includes('month-summary-event') ? ['d-none'] : [];
+                    }
+                },
+
+                dateClick: function(info) {
+                    showDayDetails(info.dateStr);
+                },
+
+                eventClick: function(info) {
+                    let dateStr = info.event.startStr.split('T')[0];
+                    showDayDetails(dateStr);
+                    info.jsEvent.preventDefault();
+                }
+            });
+            calendar.render();
+
+            function showDayDetails(dateStr) {
+                if (!dateStr) return;
+
+                const listContainer = document.getElementById('dayReservationsList');
+                listContainer.innerHTML = '<div class="text-center py-3"><div class="spinner-border text-primary spinner-border-sm"></div></div>';
+
+                document.getElementById('modalDateLabel').innerText = "Bookings for " + dateStr;
+
+                // Safety check for the restricted management link
+                const manageLink = document.getElementById('manageDayLink');
+                if (manageLink) {
+                    manageLink.href = `@Url.Action("ManageReservations", "Employee")?startDate=${dateStr}&endDate=${dateStr}`;
+                }
+
+                fetch(`@Url.Action("GetReservationsByDay", "Reservation")?date=${dateStr}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        let html = '';
+                        if (!data || data.length === 0) {
+                            html = '<p class="text-muted text-center py-3">No bookings on this date.</p>';
+                        } else {
+                            html = '<div class="list-group list-group-flush">';
+                            data.forEach(item => {
+                                let badge = (item.status || item.Status) === 'Confirmed' ? 'bg-success' : 'bg-warning text-dark';
+                                html += `
+                                    <div class="list-group-item px-0 border-0 d-flex justify-content-between align-items-center mb-2">
+                                        <div>
+                                            <span class="fw-bold d-block">${item.time || item.Time} - ${item.client || item.Client}</span>
+                                            <small class="text-muted"><i class="bi bi-clock me-1"></i>${item.length || item.Length} Hours Duration</small>
+                                        </div>
+                                        <span class="badge ${badge} px-3 rounded-pill">${item.status || item.Status}</span>
+                                    </div>`;
+                            });
+                            html += '</div>';
+                        }
+                        listContainer.innerHTML = html;
+
+                        document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+                        dayModal.show();
+                    });
+            }
+        });
+    </script>
+}
+
+<style>
+    .fw-black {
+        font-weight: 900;
+    }
+
+    .bg-soft-primary {
+        background: rgba(108, 92, 231, 0.1);
+    }
+
+    #calendar {
+        min-height: 700px;
+    }
+
+    .month-summary-event {
+        font-size: 0.9rem !important;
+        padding: 5px !important;
+        border-radius: 6px !important;
+        text-align: center;
+        border: none !important;
+        cursor: pointer !important;
+        pointer-events: auto !important;
+    }
+
+    .week-detail-event {
+        border-radius: 4px !important;
+        font-size: 0.8rem;
+        border: none !important;
+        cursor: pointer !important;
+    }
+
+    .month-summary-event .fc-event-title {
+        color: inherit;
+    }
+
+    .week-detail-event[style*="background-color: #ffc107"],
+    .week-detail-event[style*="background-color: rgb(255, 193, 7)"] {
+        color: #000 !important;
+    }
+
+    .d-none {
+        display: none !important;
+    }
+
+    .fc .fc-toolbar-title {
+        font-weight: 900;
+        color: #2d3436;
+    }
+
+    .fc .fc-button-primary {
+        background-color: #6c5ce7;
+        border: none;
+        font-weight: 600;
+    }
+
+        .fc .fc-button-primary:hover {
+            background-color: #5b4bc4;
+        }
+
+    .btn-modern-primary {
+        background: #6c5ce7;
+        color: white;
+        border-radius: 10px;
+        font-weight: 600;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+    }
+
+        .btn-modern-primary:hover {
+            background: #5b4bc4;
+            color: white;
+        }
+</style>

@@ -56,17 +56,27 @@
     </div>
 
     <div class="row g-4 text-center">
-        <div class="col-md-3">
+        <div class="col-md-4 col-lg">
             <div class="stat-card p-4 h-100 border-0 shadow-sm transition hover-up">
                 <div class="icon-shape bg-soft-primary text-primary rounded-circle mx-auto mb-3">
-                    <i class="bi bi-journal-check fs-4"></i>
+                    <i class="bi bi-journal-text fs-4"></i>
                 </div>
-                <h6 class="text-muted fw-bold small text-uppercase">Total Bookings</h6>
+                <h6 class="text-muted fw-bold small text-uppercase">Total Requests</h6>
                 <h2 class="display-6 fw-black mb-0">@Model.TotalReservations</h2>
             </div>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-4 col-lg">
+            <div class="stat-card p-4 h-100 border-0 shadow-sm transition hover-up">
+                <div class="icon-shape bg-soft-success text-success rounded-circle mx-auto mb-3">
+                    <i class="bi bi-calendar-check-fill fs-4"></i>
+                </div>
+                <h6 class="text-muted fw-bold small text-uppercase">Confirmed</h6>
+                <h2 class="display-6 fw-black mb-0 text-success">@Model.ConfirmedReservations</h2>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-lg">
             <div class="stat-card p-4 h-100 border-0 shadow-sm transition hover-up bg-primary-gradient">
                 <div class="icon-shape bg-white-transparent text-white rounded-circle mx-auto mb-3">
                     <i class="bi bi-cash-stack fs-4"></i>
@@ -76,7 +86,7 @@
             </div>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-6 col-lg">
             <div class="stat-card p-4 h-100 border-0 shadow-sm transition hover-up">
                 <div class="icon-shape bg-soft-accent text-accent rounded-circle mx-auto mb-3">
                     <i class="bi bi-star-fill fs-4"></i>
@@ -86,9 +96,9 @@
             </div>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-6 col-lg">
             <div class="stat-card p-4 h-100 border-0 shadow-sm transition hover-up">
-                <div class="icon-shape bg-soft-success text-success rounded-circle mx-auto mb-3">
+                <div class="icon-shape bg-soft-info text-info rounded-circle mx-auto mb-3">
                     <i class="bi bi-clock-history fs-4"></i>
                 </div>
                 <h6 class="text-muted fw-bold small text-uppercase">Upcoming</h6>
@@ -122,22 +132,72 @@
         background: rgba(255, 255, 255, 0.2);
     }
 
+    /* Soft Colors */
+    .bg-soft-primary {
+        background: rgba(108, 92, 231, 0.1);
+    }
+
+    .bg-soft-success {
+        background: rgba(40, 167, 69, 0.1);
+    }
+
+    .bg-soft-accent {
+        background: rgba(253, 121, 168, 0.1);
+        color: #fd79a8;
+    }
+
+    .bg-soft-info {
+        background: rgba(0, 206, 201, 0.1);
+        color: #00cec9;
+    }
+
+    .text-accent {
+        color: #fd79a8;
+    }
+
     /* Hover State */
     .hover-up:hover {
         transform: translateY(-8px);
         box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
     }
 
-
-
-
-    /* Inputs */
-    .form-control:focus {
-        border-color: #6c5ce7;
-        box-shadow: 0 0 0 0.25rem rgba(108, 92, 231, 0.1);
+    /* Buttons */
+    .btn-modern-primary {
+        background: #6c5ce7;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 10px 20px;
+        font-weight: 600;
+        transition: all 0.3s;
     }
 
+        .btn-modern-primary:hover {
+            background: #5b4bc4;
+            color: white;
+        }
+
+    .btn-modern-outline-secondary {
+        border: 1.5px solid #dee2e6;
+        border-radius: 12px;
+        color: #6c757d;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 15px;
+    }
+
+    /* Typography */
     .fw-black {
         font-weight: 900;
+    }
+
+    .italic {
+        font-style: italic;
+    }
+
+    .glass-card {
+        background: white;
+        border-radius: 20px;
     }
 </style>

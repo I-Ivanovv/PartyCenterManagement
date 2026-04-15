@@ -38,17 +38,25 @@
         </div>
     </div>
 
-    <div class="row g-4">
+    <div class="row g-4 align-items-start">
         @foreach (var r in Model)
         {
             <div class="col-lg-4 col-md-6">
                 <div class="reservation-card border-0 shadow-sm overflow-hidden bg-white">
                     @{
-                        var statusClass = r.Status == "Pending" ? "bg-warning" : (r.Status == "Confirmed" ? "bg-success" : "bg-danger");
+                        // Color Logic: Pending (Yellow), Confirmed (Green), Cancelled (Gray), Declined (Red)
+                        var statusClass = r.Status switch
+                        {
+                            "Pending" => "bg-warning",
+                            "Confirmed" => "bg-success",
+                            "Cancelled" => "bg-secondary",
+                            "Declined" => "bg-danger",
+                            _ => "bg-dark"
+                        };
                         var clientName = r.User != null ? $"{r.User.FirstName} {r.User.LastName}" : $"{r.GFirstName} {r.GLastName}";
                     }
 
-                    <div class="p-3 text-white d-flex justify-content-between align-items-center @statusClass" style="--bs-bg-opacity: .8;">
+                    <div class="p-3 text-white d-flex justify-content-between align-items-center @statusClass" style="--bs-bg-opacity: .85;">
                         <span class="fw-bold small text-uppercase">@r.Status</span>
                         <span class="badge bg-white @(r.Paid ? "text-success" : "text-danger") shadow-sm">
                             @(r.Paid ? "PAID" : "UNPAID")
@@ -70,36 +78,49 @@
                         </div>
 
                         <div class="bg-light rounded-3 p-2 mb-3">
-                            <small class="text-muted d-block">Package & Services</small>
+                            <small class="text-muted d-block small text-uppercase fw-bold" style="font-size: 0.65rem;">Package</small>
                             <span class="fw-bold text-dark">@r.Package.Name</span>
-                            <div class="text-primary small">Total: @r.Price.ToString("C0")</div>
+                            <div class="text-primary small fw-bold">Total: @r.Price.ToString("C0")</div>
                         </div>
 
-                        <div class="d-grid gap-2" style="min-height: 85px;">
-
-                            <div style="min-height: 38px;">
-                                @if (r.Status == "Pending")
-                                {
-                                    <div class="d-flex gap-2 align-items-stretch">
-                                        <form asp-action="UpdateStatus" method="post" class="flex-grow-1 m-0">
-                                            <input type="hidden" name="id" value="@r.ReservationID" />
-                                            <input type="hidden" name="status" value="Confirmed" />
-                                            <button type="submit" class="btn btn-sm btn-outline-success w-100 h-100 rounded-3">Accept</button>
-                                        </form>
-                                        <form asp-action="UpdateStatus" method="post" class="flex-grow-1 m-0">
-                                            <input type="hidden" name="id" value="@r.ReservationID" />
-                                            <input type="hidden" name="status" value="Declined" />
-                                            <button type="submit" class="btn btn-sm btn-outline-danger w-100 h-100 rounded-3">Decline</button>
-                                        </form>
+                        @if (!string.IsNullOrWhiteSpace(r.Note))
+                        {
+                            <div class="mb-3">
+                                <button class="btn btn-sm btn-outline-secondary w-100 text-start d-flex justify-content-between align-items-center rounded-3 shadow-none border-dashed"
+                                        type="button" data-bs-toggle="collapse" data-bs-target="#note-@r.ReservationID">
+                                    <span class="small"><i class="bi bi-chat-left-text me-2"></i>View Note</span>
+                                    <i class="bi bi-chevron-down small"></i>
+                                </button>
+                                <div class="collapse" id="note-@r.ReservationID">
+                                    <div class="p-3 bg-soft-primary rounded-3 small text-dark border-start border-primary border-4 mt-2">
+                                        @r.Note
                                     </div>
-                                }
+                                </div>
                             </div>
+                        }
 
-                            <div class="d-flex gap-2 align-items-stretch">
+                        <div class="pt-2">
+                            @if (r.Status == "Pending")
+                            {
+                                <div class="d-flex gap-2 mb-2">
+                                    <form asp-action="UpdateStatus" method="post" class="flex-grow-1 m-0">
+                                        <input type="hidden" name="id" value="@r.ReservationID" />
+                                        <input type="hidden" name="status" value="Confirmed" />
+                                        <button type="submit" class="btn btn-sm btn-outline-success w-100 rounded-3 py-2 fw-bold">Accept</button>
+                                    </form>
+                                    <form asp-action="UpdateStatus" method="post" class="flex-grow-1 m-0">
+                                        <input type="hidden" name="id" value="@r.ReservationID" />
+                                        <input type="hidden" name="status" value="Declined" />
+                                        <button type="submit" class="btn btn-sm btn-outline-danger w-100 rounded-3 py-2 fw-bold">Decline</button>
+                                    </form>
+                                </div>
+                            }
+
+                            <div class="d-flex gap-2">
                                 <a asp-controller="Reservation"
                                    asp-action="Reserve"
                                    asp-route-id="@r.ReservationID"
-                                   class="btn btn-sm btn-modern-primary flex-grow-1 d-flex align-items-center justify-content-center rounded-3">
+                                   class="btn btn-sm btn-modern-primary flex-grow-1 rounded-3 py-2 text-center">
                                     Edit
                                 </a>
 
@@ -107,7 +128,7 @@
                                 {
                                     <form asp-action="MarkAsPaid" method="post" class="flex-grow-1 m-0">
                                         <input type="hidden" name="id" value="@r.ReservationID" />
-                                        <button type="submit" class="btn btn-sm btn-success w-100 h-100 rounded-3">Mark Paid</button>
+                                        <button type="submit" class="btn btn-sm btn-success w-100 rounded-3 py-2 fw-bold">Mark Paid</button>
                                     </form>
                                 }
                             </div>
@@ -118,3 +139,67 @@
         }
     </div>
 </div>
+
+<style>
+    .fw-black {
+        font-weight: 900;
+    }
+
+    .reservation-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        border: 1px solid #eee !important;
+    }
+
+        .reservation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important;
+        }
+
+    .bg-soft-primary {
+        background-color: rgba(108, 92, 231, 0.08);
+    }
+
+    .icon-box-sm {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .border-dashed {
+        border-style: dashed !important;
+    }
+
+    .modern-input {
+        border-radius: 10px;
+        border: 1.5px solid #dee2e6;
+        padding: 10px 15px;
+    }
+
+    .btn-modern-primary {
+        background: #6c5ce7;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .btn-modern-primary:hover {
+            background: #5b4bc4;
+            color: white;
+        }
+
+    .btn-modern-outline-accent {
+        border: 1.5px solid #fd79a8;
+        color: #fd79a8;
+        border-radius: 10px;
+        font-weight: 600;
+        padding: 10px 20px;
+    }
+</style>

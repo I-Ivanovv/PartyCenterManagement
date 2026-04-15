@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PartyCenterManagement.Models;
 using PartyCenterManagement.Services;
 
 namespace PartyCenterManagement.Controllers
 {
+    [Authorize(Roles = "Admin,Employee")]
     public class EmployeeController : Controller
     {
         ReservationServices _reservationService;

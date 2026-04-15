@@ -184,18 +184,24 @@ namespace PartyCenterManagement.Services
             var reservations = await query.ToListAsync();
 
             var totalReservations = reservations.Count;
-            var revenue = reservations.Sum(r => r.Price);
+            // New variable for confirmed count
+            var confirmedCount = reservations.Count(r => r.Status == "Confirmed");
+
+            var revenue = reservations.Where(r => r.Status == "Confirmed").Sum(r => r.Price);
+
             var mostPopular = reservations
                 .GroupBy(r => r.Package.Name)
                 .OrderByDescending(g => g.Count())
                 .FirstOrDefault()?.Key ?? "N/A";
+
             var upcoming = reservations
-                .Where(r => r.Status != "Cancelled" || r.Status != "Declined")
+                .Where(r => r.Status != "Cancelled" && r.Status != "Declined") // Fixed logical error here (should be &&)
                 .Count(r => r.Date > DateTime.Now);
 
             return new AdminDashboardViewModel
             {
                 TotalReservations = totalReservations,
+                ConfirmedReservations = confirmedCount, // Mapped here
                 TotalRevenue = revenue,
                 MostPopularPackage = mostPopular,
                 UpcomingReservations = upcoming,
@@ -245,10 +251,12 @@ namespace PartyCenterManagement.Services
 
             if (upcomingOnly)
             {
-                query = query.Where(r => r.Date >= DateTime.Now && r.Status != "Cancelled" || r.Status != "Declined");
+                query = query.Where(r => r.Date >= DateTime.Now && r.Status != "Cancelled" && r.Status != "Declined");
             }
 
             return await query.OrderByDescending(r => r.Date).ToListAsync();
         }
+
     }
+
 }
