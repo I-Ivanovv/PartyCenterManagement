@@ -95,10 +95,10 @@
                         <span asp-validation-for="Time" class="text-danger x-small mt-1"></span>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Length (Hours)</label>
+                        <label class="form-label small fw-bold text-muted text-uppercase">Length (Exact Hours)</label>
                         <div class="input-group modern-input-group">
                             <span class="input-group-text bg-white border-end-0"><i class="bi bi-hourglass-split text-primary"></i></span>
-                            <input asp-for="Length" id="lengthInput" type="number" step="0.1" class="form-control border-start-0 ps-0 shadow-none" required />
+                            <input asp-for="Length" id="lengthInput" type="number" step="1" min="1" class="form-control border-start-0 ps-0 shadow-none" required />
                         </div>
                         <div class="text-danger x-small mt-1" id="lengthError"></div>
                         <span asp-validation-for="Length" class="text-danger x-small"></span>
@@ -189,7 +189,6 @@
     .bg-soft-primary {
         background: rgba(108, 92, 231, 0.08);
     }
-
 
     .modern-input, .modern-input-group {
         border-radius: 12px;
@@ -317,12 +316,23 @@
             let valid = true;
 
             const duration = parseFloat(lengthInput.value);
-            if (lengthInput.value !== "" && (duration < 0.5 || duration > maxLength)) {
-                lengthError.textContent = duration < 0.5 ? "✖ Min 0.5h" : "✖ Max " + maxLength + "h";
+
+            const isInteger = Number.isInteger(duration);
+
+            if (lengthInput.value !== "") {
+                if (duration < 1 || duration > maxLength) {
+                    lengthError.textContent = duration < 1 ? "✖ Min 1h" : "✖ Max " + maxLength + "h";
+                    valid = false;
+                } else if (!isInteger) {
+                    valid = false;
+                } else {
+                    lengthError.textContent = "";
+                }
+            }
+
+            if (!valid) {
                 lengthInput.closest('.modern-input-group').style.borderColor = "#dc3545";
-                valid = false;
             } else {
-                lengthError.textContent = "";
                 lengthInput.closest('.modern-input-group').style.borderColor = "";
             }
 

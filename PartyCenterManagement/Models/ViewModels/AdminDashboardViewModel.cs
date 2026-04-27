@@ -3,7 +3,7 @@
     public class AdminDashboardViewModel
     {
         public int TotalReservations { get; set; }
-        public int ConfirmedReservations { get; set; } // Added this
+        public int ConfirmedReservations { get; set; } 
         public double TotalRevenue { get; set; }
         public string MostPopularPackage { get; set; }
         public int UpcomingReservations { get; set; }

@@ -43,7 +43,6 @@
                         <label asp-for="Price" class="form-label small fw-bold text-muted text-uppercase">Base Price (€)</label>
                         <div class="input-group modern-input-group">
                             <span class="input-group-text bg-white border-end-0"><i class="bi bi-currency-euro text-primary"></i></span>
-                            @* Added min="0" to prevent negative price *@
                             <input asp-for="Price" class="form-control border-start-0 ps-0 shadow-none" type="number" step="0.01" min="0" />
                         </div>
                         <span asp-validation-for="Price" class="text-danger small"></span>
@@ -53,7 +52,6 @@
                         <label asp-for="MaxGuests" class="form-label small fw-bold text-muted text-uppercase">Max Capacity</label>
                         <div class="input-group modern-input-group">
                             <span class="input-group-text bg-white border-end-0"><i class="bi bi-people text-primary"></i></span>
-                            @* Added min="1" because a party usually needs at least 1 person *@
                             <input asp-for="MaxGuests" class="form-control border-start-0 ps-0 shadow-none" type="number" min="1" />
                         </div>
                         <span asp-validation-for="MaxGuests" class="text-danger small"></span>
@@ -64,7 +62,6 @@
                     <label asp-for="MaxLength" class="form-label small fw-bold text-muted text-uppercase">Duration (Hours)</label>
                     <div class="input-group modern-input-group" style="max-width: 250px;">
                         <span class="input-group-text bg-white border-end-0"><i class="bi bi-clock text-primary"></i></span>
-                        @* Added min="0.5" to prevent negative or zero duration *@
                         <input asp-for="MaxLength" class="form-control border-start-0 ps-0 shadow-none" type="number" step="0.5" min="0.5" />
                     </div>
                     <span asp-validation-for="MaxLength" class="text-danger small"></span>
@@ -151,7 +148,6 @@
         background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
     }
 
-    /* Input Styling */
     .modern-input-group {
         border-radius: 12px;
         overflow: hidden;
@@ -174,7 +170,6 @@
             padding-left: 15px;
         }
 
-    /* Service Selector Grid */
     .service-selector-grid {
         max-height: 350px;
         overflow-y: auto;
@@ -198,7 +193,6 @@
         border-color: #6c5ce7;
     }
 
-    /* Buttons */
     .btn-modern-primary {
         background: #6c5ce7;
         color: white;

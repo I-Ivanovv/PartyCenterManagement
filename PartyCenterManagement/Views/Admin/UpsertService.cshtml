@@ -123,7 +123,6 @@
         priceInput.addEventListener("input", function() {
             const val = parseFloat(this.value);
 
-            // Validation logic similar to the reservation page
             if (this.value !== "" && val < 0) {
                 priceError.textContent = "✖ Price cannot be negative";
                 this.closest('.modern-input-group').style.borderColor = "#dc3545";

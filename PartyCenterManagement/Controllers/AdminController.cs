@@ -62,7 +62,6 @@ namespace PartyCenterManagement.Controllers
         {
             var services = await _packageServices.GetServices();
 
-            // CREATE
             if (id == null || id == 0)
             {
                 return View(new UpsertPackageViewModel
@@ -71,7 +70,6 @@ namespace PartyCenterManagement.Controllers
                 });
             }
 
-            // EDIT
             var packages = await _packageServices.GetPackages();
             var package = packages.FirstOrDefault(p => p.PackageID == id);
 
@@ -94,7 +92,6 @@ namespace PartyCenterManagement.Controllers
             return View(vm);
         }
 
-        // POST: Edit Package
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpsertPackage(UpsertPackageViewModel model)
@@ -105,7 +102,6 @@ namespace PartyCenterManagement.Controllers
                 return View(model);
             }
 
-            // CREATE
             if (model.PackageID == 0)
             {
                 await _packageServices.CreatePackage(
@@ -115,9 +111,8 @@ namespace PartyCenterManagement.Controllers
                     model.MaxLength
                 );
 
-                // Optional: attach services after creation
                 var createdPackages = await _packageServices.GetPackages();
-                var created = createdPackages.Last(); // or find by name if needed
+                var created = createdPackages.Last(); 
 
                 foreach (var serviceId in model.SelectedServiceIds)
                 {
@@ -126,7 +121,6 @@ namespace PartyCenterManagement.Controllers
             }
             else
             {
-                // UPDATE
                 await _packageServices.UpdatePackage(
                     model.PackageID,
                     model.Name,
@@ -140,7 +134,6 @@ namespace PartyCenterManagement.Controllers
 
                 var currentServiceIds = package.PackageServices.Select(ps => ps.ServiceID).ToList();
 
-                // remove unchecked
                 foreach (var serviceId in currentServiceIds)
                 {
                     if (!model.SelectedServiceIds.Contains(serviceId))
@@ -149,7 +142,6 @@ namespace PartyCenterManagement.Controllers
                     }
                 }
 
-                // add new
                 foreach (var serviceId in model.SelectedServiceIds)
                 {
                     if (!currentServiceIds.Contains(serviceId))
@@ -259,7 +251,7 @@ namespace PartyCenterManagement.Controllers
                 PhoneNumber = user.PhoneNumber,
                 FirstName = profile?.FirstName,
                 LastName = profile?.LastName,
-                Role = role.FirstOrDefault() // assuming only 1 role per user
+                Role = role.FirstOrDefault() 
             };
 
             return View(vm);

@@ -184,7 +184,6 @@ namespace PartyCenterManagement.Services
             var reservations = await query.ToListAsync();
 
             var totalReservations = reservations.Count;
-            // New variable for confirmed count
             var confirmedCount = reservations.Count(r => r.Status == "Confirmed");
 
             var revenue = reservations.Where(r => r.Status == "Confirmed").Sum(r => r.Price);
@@ -195,13 +194,13 @@ namespace PartyCenterManagement.Services
                 .FirstOrDefault()?.Key ?? "N/A";
 
             var upcoming = reservations
-                .Where(r => r.Status != "Cancelled" && r.Status != "Declined") // Fixed logical error here (should be &&)
+                .Where(r => r.Status != "Cancelled" && r.Status != "Declined")
                 .Count(r => r.Date > DateTime.Now);
 
             return new AdminDashboardViewModel
             {
                 TotalReservations = totalReservations,
-                ConfirmedReservations = confirmedCount, // Mapped here
+                ConfirmedReservations = confirmedCount, 
                 TotalRevenue = revenue,
                 MostPopularPackage = mostPopular,
                 UpcomingReservations = upcoming,

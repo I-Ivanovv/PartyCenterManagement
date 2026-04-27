@@ -28,7 +28,6 @@
             <div class="modal-body">
                 <div id="dayReservationsList" class="mb-4"></div>
 
-                @* Role-based security check for management link *@
                 @if (User.IsInRole("Employee") || User.IsInRole("Admin"))
                 {
                     <div class="d-grid">
@@ -89,7 +88,6 @@
 
                 document.getElementById('modalDateLabel').innerText = "Bookings for " + dateStr;
 
-                // Safety check for the restricted management link
                 const manageLink = document.getElementById('manageDayLink');
                 if (manageLink) {
                     manageLink.href = `@Url.Action("ManageReservations", "Employee")?startDate=${dateStr}&endDate=${dateStr}`;
