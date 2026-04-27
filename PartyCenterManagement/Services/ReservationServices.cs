@@ -255,7 +255,15 @@ namespace PartyCenterManagement.Services
 
             return await query.OrderByDescending(r => r.Date).ToListAsync();
         }
-
+        public async Task DeleteReservationAsync(int id)
+        {
+            var reservation = await _db.Reservations.FindAsync(id);
+            if (reservation != null)
+            {
+                _db.Reservations.Remove(reservation);
+                await _db.SaveChangesAsync();
+            }
+        }
     }
 
 }

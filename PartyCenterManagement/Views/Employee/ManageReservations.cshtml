@@ -31,7 +31,7 @@
 
                     <div class="col-xl-4 col-md-8 d-flex gap-2 pt-xl-4">
                         <button type="submit" class="btn btn-modern-primary flex-grow-1">Apply Filters</button>
-                        <a asp-action="ManageReservations" class="btn btn-modern-outline-accent">Reset</a>
+                        <a asp-action="ManageReservations" class=" btn-modern-outline-accent">Reset</a>
                     </div>
                 </div>
             </form>
@@ -46,10 +46,10 @@
                     @{
                         var statusClass = r.Status switch
                         {
-                            "Pending" => "bg-warning",
-                            "Confirmed" => "bg-success",
-                            "Cancelled" => "bg-secondary",
-                            "Declined" => "bg-danger",
+                                        "Pending" => "bg-warning",
+                                        "Confirmed" => "bg-success",
+                                        "Cancelled" => "bg-secondary",
+                                        "Declined" => "bg-danger",
                             _ => "bg-dark"
                         };
                         var clientName = r.User != null ? $"{r.User.FirstName} {r.User.LastName}" : $"{r.GFirstName} {r.GLastName}";
@@ -115,21 +115,30 @@
                                 </div>
                             }
 
-                            <div class="d-flex gap-2">
-                                <a asp-controller="Reservation"
-                                   asp-action="Reserve"
-                                   asp-route-id="@r.ReservationID"
-                                   class="btn btn-sm btn-modern-primary flex-grow-1 rounded-3 py-2 text-center">
-                                    Edit
-                                </a>
+                            <div class="d-flex flex-column gap-2">
+                                <div class="d-flex gap-2">
+                                    <a asp-controller="Reservation"
+                                       asp-action="Reserve"
+                                       asp-route-id="@r.ReservationID"
+                                       class="btn btn-sm btn-modern-primary flex-grow-1 rounded-3 py-2">
+                                        <i class="bi bi-pencil-square me-1"></i> Edit
+                                    </a>
 
-                                @if (!r.Paid)
-                                {
-                                    <form asp-action="MarkAsPaid" method="post" class="flex-grow-1 m-0">
-                                        <input type="hidden" name="id" value="@r.ReservationID" />
-                                        <button type="submit" class="btn btn-sm btn-success w-100 rounded-3 py-2 fw-bold">Mark Paid</button>
-                                    </form>
-                                }
+                                    @if (!r.Paid)
+                                    {
+                                        <form asp-action="MarkAsPaid" method="post" class="flex-grow-1 m-0">
+                                            <input type="hidden" name="id" value="@r.ReservationID" />
+                                            <button type="submit" class="btn btn-sm btn-success w-100 rounded-3 py-2 fw-bold">Mark Paid</button>
+                                        </form>
+                                    }
+                                </div>
+
+                                <form asp-action="Delete" method="post" onsubmit="return confirm('WARNING: Are you sure you want to PERMANENTLY DELETE this reservation?');" class="m-0 w-100">
+                                    <input type="hidden" name="id" value="@r.ReservationID" />
+                                    <button type="submit" class="btn-sm btn-delete-modern w-100 rounded-3 py-2 fw-bold shadow-sm text-white">
+                                        <i class="bi bi-trash3 me-1"></i> Delete Permanently
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -147,6 +156,7 @@
     .reservation-card {
         transition: transform 0.2s, box-shadow 0.2s;
         border: 1px solid #eee !important;
+        border-radius: 15px;
     }
 
         .reservation-card:hover {
@@ -200,5 +210,18 @@
         border-radius: 10px;
         font-weight: 600;
         padding: 10px 20px;
+        transition: all 0.3s;
     }
+    .btn-modern-outline-accent:hover {
+            ransform: scale(1.02);
+        border: 1.5px solid #fd79a8;
+        background-color: #fd79a8;
+        color: #000000;
+        border-radius: 10px;
+        font-weight: 600;
+        padding: 10px 20px;
+    }
+
+
+    
 </style>

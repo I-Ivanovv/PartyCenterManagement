@@ -36,5 +36,13 @@ namespace PartyCenterManagement.Controllers
             await _reservationService.MarkAsPaidAsync(id);
             return RedirectToAction(nameof(ManageReservations));
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _reservationService.DeleteReservationAsync(id);
+            return RedirectToAction(nameof(ManageReservations));
+        }
     }
 }
