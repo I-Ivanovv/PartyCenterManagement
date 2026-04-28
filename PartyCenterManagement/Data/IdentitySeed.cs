@@ -22,6 +22,8 @@ namespace PartyCenterManagement.Data
                
             }
             await EnsureUserWithRole(userManager,userProfileService, "admin@party.local", "Admin99*", "Admin");
+            await EnsureUserWithRole(userManager, userProfileService, "employee@party.local", "Employee99*", "Employee");
+            await EnsureUserWithRole(userManager, userProfileService, "user@party.local", "User99*", "Client");
         }
 
         private static async Task EnsureUserWithRole(
@@ -50,7 +52,18 @@ namespace PartyCenterManagement.Data
             }
             if (await userProfileService.GetUserProfileAsync(user) == null)
             {
-                await userProfileService.CreateUserProfileAsync(user, "Admin", "User");
+                if (role == "Admin")
+                {
+                    await userProfileService.CreateUserProfileAsync(user, "Admin", "User");
+                }
+                else if (role == "Employee")
+                {
+                    await userProfileService.CreateUserProfileAsync(user, "Employee", "User");
+                }
+                else if (role == "Client")
+                {
+                    await userProfileService.CreateUserProfileAsync(user, "Client", "User");
+                }
             }
             
             if (!await userManager.IsInRoleAsync(user, role))
