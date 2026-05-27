@@ -1,11 +1,4 @@
-/* ==========================
-   PartyCenterManagement Theme
-   Violet Primary / Teal Accent
-   ========================== */
 
-/* --------------------------
-   1. Theme Variables
---------------------------- */
 
 :root {
     --violet-main: #6c5ce7;
@@ -15,25 +8,20 @@
     --primary: #6C5CE7;
     --primary-dark: #5649C0;
     --primary-light: #A29BFE;
-    /* Accent color */
     --accent: #00CEC9;
-    /* Backgrounds and surfaces */
     --background: #f1f1ff;
     --surface: #FFFFFF;
-    /* Text */
     --text-primary: #2D3436;
     --text-muted: #636E72;
-    /* Borders */
     --border: #E5E7EB;
 }
 
-/* --- Sticky Footer Logic --- */
 html, body {
     height: 100%;
 }
 header, footer {
     position: relative;
-    z-index: 2; /* This puts your content ABOVE the confetti */
+    z-index: 2; 
 }
 
 body {
@@ -58,12 +46,10 @@ body {
     pointer-events: none;
     width: 100vw;
     height: 100vh;
-    pointer-events: none; /* Allows clicking through */
-    z-index: 1; /* Sits above body background, but below main content */
+    pointer-events: none; 
+    z-index: 1; 
     overflow: hidden;
 }
-
-/* --- Navbar Wrapper --- */
 .theme-navbar {
     background: transparent !important;
     padding: 1.5rem 2rem;
@@ -84,14 +70,12 @@ body {
 }
 
 
-    /* Brand */
     .theme-navbar .navbar-brand {
         font-size: 1.3rem;
         font-weight: 700;
         letter-spacing: 0.5px;
     }
 
-    /* Links */
     .theme-navbar .nav-link {
         color: rgba(255,255,255,0.85);
         font-weight: 600;
@@ -122,7 +106,6 @@ body {
     box-shadow: 0 8px 15px rgba(108, 92, 231, 0.3);
 }
 
-/* --- Centralized Main Pill --- */
 .nav-pill-main {
     background: var(--violet-main);
     border-radius: 60px;
@@ -151,7 +134,6 @@ body {
         border-radius: 50px;
     }
 
-/* --- Admin Dropdown Fix --- */
 .dropdown-menu {
     position: absolute !important;
     background: #ffffff;
@@ -171,7 +153,6 @@ body {
     border-radius: 12px;
 }
 
-/* --- INTERESTING TOP RIGHT SECTION --- */
 .login-partial-wrapper {
     background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(10px);
@@ -180,11 +161,10 @@ body {
     box-shadow: 0 8px 20px rgba(108, 92, 231, 0.1);
     border: 1px solid var(--violet-soft);
     display: flex;
-    align-items: center; /* Vertical alignment fix */
+    align-items: center; 
     justify-content: center;
 }
 
-    /* The partial list centering fix */
     .login-partial-wrapper ul {
         display: flex;
         align-items: center;
@@ -193,7 +173,6 @@ body {
         list-style: none;
     }
 
-    /* Username Hover Effect */
     .login-partial-wrapper .nav-link {
         color: var(--violet-deep) !important;
         font-weight: 800;
@@ -207,19 +186,17 @@ body {
             transform: translateY(-1px);
         }
 
-    /* Logout Button Centering & Hover */
     .login-partial-wrapper button,
     .login-partial-wrapper .btn-link {
         background: var(--violet-main) !important;
         color: white !important;
         border-radius: 10px !important;
-        padding: 8px 18px !important; /* Increased padding for centering look */
+        padding: 8px 18px !important;
         font-weight: 700;
         border: none;
         text-decoration: none;
-        transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        margin: 0 0 0 10px; /* Reset bootstrap margins */
-        line-height: 1; /* Helps vertical centering */
+        transition: all 0.2s
+        line-height: 1; 
         display: flex;
         align-items: center;
     }
@@ -230,18 +207,16 @@ body {
             box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
         }
 
-/* --- Main Content Area --- */
 main {
     flex: 1 0 auto;
     width: 100%;
     z-index: 1;
 }
 
-/* --- SLIM HORIZONTAL FOOTER --- */
 .theme-footer {
     flex-shrink: 0;
     background: var(--footer-bg);
-    padding: 1.4rem 0; /* Slim height */
+    padding: 1.4rem 0;
     color: #d1d5db;
     font-weight: 500;
     text-align: center;
@@ -258,7 +233,7 @@ main {
         }
 
     .theme-footer small {
-        color: #B0B0B0; /* muted gray for less important text */
+        color: #B0B0B0; 
     }
 .footer-container {
     display: flex;
@@ -1136,25 +1111,21 @@ button, .btn {
     border-spacing: 0;
 }
 
-/* Align icons in headers */
 .thead-modern th i {
     font-size: 0.9rem;
     vertical-align: middle;
     opacity: 0.7;
 }
 
-/* Ensure the first and last header cells respect the card radius */
 .table-responsive {
     border-radius: 12px;
 }
 
 
-/* Typography Enhancement */
 .fw-black {
     font-weight: 800;
 }
 
-/* Package Card Customizations */
 .package-card {
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
@@ -1168,12 +1139,10 @@ button, .btn {
     border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-/* Badge Styling */
 .bg-soft-primary {
     background-color: rgba(108, 92, 231, 0.15) !important;
 }
 
-/* A La Carte Box */
 .info-box-vert {
     background: rgba(255, 255, 255, 0.5);
     border: 1px solid rgba(255, 255, 255, 0.4);
@@ -1186,18 +1155,16 @@ button, .btn {
         box-shadow: 0 10px 20px rgba(108, 92, 231, 0.1);
     }
 
-/* Fixes the Jumping Buttons */
 .card-body.d-flex.flex-column {
-    min-height: 450px; /* Adjust this number based on your content */
+    min-height: 450px; 
 }
 
 .package-btn {
-    margin-top: auto !important; /* Forces button to the bottom of the flex container */
+    margin-top: auto !important;
 }
 
-/* Fixes the Header Readability */
 .package-header {
-    background: var(--primary-dark) !important; /* Solid dark violet */
+    background: var(--primary-dark) !important;
     color: white !important;
     padding: 1.5rem 0.5rem !important;
 }
@@ -1228,7 +1195,6 @@ button, .btn {
     border-radius: 12px;
     font-weight: 600;
     transition: all 0.3s ease;
-    /* Prevents the blue/white highlight box on mobile tap */
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -1238,19 +1204,13 @@ button, .btn {
         transform: scale(1.02);
     }
 
-    /* --- THE FIX FOR HOLDING THE BUTTON --- */
     .btn-modern-primary:active,
     .btn-modern-primary:focus {
-        /* Keeps the background from going white */
         background: #5b4bc4 !important;
-        /* Keeps the text from going black */
         color: white !important;
-        /* Removes the browser's default white/blue glow */
         outline: none !important;
         box-shadow: none !important;
-        /* Makes it feel like a real physical press */
         transform: scale(0.96);
-        /* Dims it slightly instead of washing it out */
         filter: brightness(0.9);
     }
 

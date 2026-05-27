@@ -83,18 +83,10 @@
 
                                 <form asp-action="CancelReservation" asp-controller="Reservation" method="post" class="flex-grow-1">
                                     <input type="hidden" name="id" value="@r.ReservationID" />
-                                    @if (withinFiveDays)
-                                    {
-                                        <span class="w-100" data-bs-toggle="tooltip" title="Locked within 5 days">
-                                            <button type="submit" class="btn btn-modern-disabled w-100" disabled>Cancel</button>
-                                        </span>
-                                    }
-                                    else
-                                    {
                                         <button type="submit" class="btn btn-modern-outline-accent w-100" onclick="return confirm('Cancel this party?')">
                                             Cancel
                                         </button>
-                                    }
+                                    
                                 </form>
                             }
                         </div>
